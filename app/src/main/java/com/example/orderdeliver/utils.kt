@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.core.R
 
 fun showLog(message: String, tag: String = "MyLog"){
@@ -23,4 +25,8 @@ fun Fragment.replaceFragment(fragment: Fragment, @IdRes containerId: Int= com.ex
     val transaction = parentFragmentManager.beginTransaction()
     transaction.replace(containerId, fragment)
     transaction.commit()
+}
+
+fun <T>MutableLiveData<T>.share(): LiveData<T>{
+    return this
 }

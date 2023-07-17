@@ -1,5 +1,7 @@
 package com.example.orderdeliver.data.models
 
+import androidx.annotation.DrawableRes
+
 enum class FoodType { DRINK, FOOD, COMBO, SAUCE, ALL }
 
 data class FoodDataModel(
@@ -8,6 +10,6 @@ data class FoodDataModel(
     val description: String,
     val weight: Float,
     val price: Int,
-    val imageResource: Int,
+    @DrawableRes val imageResource: Int,
     val foodType: FoodType
 )
