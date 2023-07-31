@@ -1,59 +1,109 @@
 package com.example.orderdeliver.presentation.menu.adapter
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.res.ColorStateList
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orderdeliver.R
 import com.example.orderdeliver.data.models.FoodType
 import com.example.orderdeliver.databinding.TypeSubjectItemBinding
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
+import com.example.orderdeliver.setList
+import com.example.orderdeliver.showLog
 
-class TypeFoodAdapter: RecyclerView.Adapter<TypeFoodAdapter.TypeFoodHolder>() {
+interface TypeFoodState {
+    fun tap(id: Int, foodType: FoodType)
+}
 
-    var types = mutableListOf<TypeFoodModel>()
+class TypeFoodAdapter(private val typeFoodState: TypeFoodState) :
+    RecyclerView.Adapter<TypeFoodAdapter.TypeFoodHolder>() {
+
+    private var foods: ArrayList<TypeFoodModel> = ArrayList()
+        set(value) {
+            showLog("field $field")
+            showLog("value $value")
+            field = value
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TypeFoodHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.type_subject_item, parent,false)
-        return TypeFoodHolder(view)
+        val view = inflater.inflate(R.layout.type_subject_item, parent, false)
+        return TypeFoodHolder(view,typeFoodState)
     }
 
-    override fun getItemCount(): Int = types.size
+    override fun getItemCount(): Int = foods.size
 
-    override fun onBindViewHolder(holder: TypeFoodHolder, position: Int){
-        holder.bind(types[position])
+    override fun onBindViewHolder(
+        holder: TypeFoodHolder,
+        position: Int,
+    ) {
+        holder.bind(foods[position])
     }
 
-    class TypeFoodHolder(view: View): RecyclerView.ViewHolder(view){
+    fun updateList(newList: List<TypeFoodModel>){
+        //showLog("old " + foods)
+       // showLog("new " + newList)
+        val diffCallback = TypeFoodDiffCallback(foods, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        foods.setList(newList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    class TypeFoodHolder(view: View,private val typeFoodState: TypeFoodState) : RecyclerView.ViewHolder(view) {
 
         private val binding = TypeSubjectItemBinding.bind(view)
 
         private val context = binding.root.context
 
         @SuppressLint("ResourceAsColor")
-        fun bind(type: TypeFoodModel) = with(binding){
+        fun bind(type: TypeFoodModel) = with(binding) {
 
-            val text = when(type.foodType){
-                FoodType.ALL -> "Всё"
-                FoodType.FOOD -> "Еда"
-                FoodType.COMBO -> "Комбо"
-                FoodType.SAUCE -> "Соусы"
-                FoodType.DRINK -> "Коктейли"
-            }
 
-            val colorBackground = ContextCompat.getColor(context,if (type.isActivated)R.color.type_subject_color_pressed else R.color.type_subject_color_default)
-            val colorText = ContextCompat.getColor(context,if (type.isActivated)R.color.white else R.color.grey)
+            val colorBackground = ContextCompat.getColor(
+                context,
+                if (type.isActivated) R.color.type_subject_color_pressed else R.color.type_subject_color_default
+            )
+            val colorText = ContextCompat.getColor(
+                context,
+                if (type.isActivated) R.color.white else R.color.grey
+            )
 
-            typeItemText.text = text
+            typeItemText.text = type.nameFoodType
             typeItemText.setTextColor(ColorStateList.valueOf(colorText))
             itemCard.setCardBackgroundColor(ColorStateList.valueOf(colorBackground))
+
+            binding.root.setOnClickListener {
+                typeFoodState.tap(type.id, type.foodType)
+            }
 
         }
 
     }
 
 }
+
+private class TypeFoodDiffCallback(
+    val oldList: List<TypeFoodModel>,
+    val newList: List<TypeFoodModel>,
+) : DiffUtil.Callback() {
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+
+        return oldList[oldItemPosition] == newList[newItemPosition]
+    }
+}
+
+

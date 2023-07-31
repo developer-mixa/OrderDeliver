@@ -1,10 +1,17 @@
 package com.example.orderdeliver.data
 
 import com.example.orderdeliver.data.models.BasketModel
+import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.domain.BasketRepository
 import com.example.orderdeliver.domain.exceptions.ZeroItemException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class DefaultBasketRepository: BasketRepository {
+@Singleton
+class DefaultBasketRepository @Inject constructor(): BasketRepository {
+
+    private val mapCountBasketsById = mutableMapOf<Int, BasketModel>()
+
     override fun priceForSubject(basketModel: BasketModel): Int {
         if (basketModel.count == 0) throw ZeroItemException()
         return basketModel.foodDataModel.price * basketModel.count
@@ -18,4 +25,17 @@ class DefaultBasketRepository: BasketRepository {
         }
         return result
     }
+
+    override fun addBasket(foodDataModel: FoodDataModel) {
+        val countById = (mapCountBasketsById[foodDataModel.id]?.count ?: 0)
+        mapCountBasketsById[foodDataModel.id] = BasketModel(foodDataModel, countById + 1)
+    }
+
+    override fun getBaskets(): List<BasketModel>? {
+        if (mapCountBasketsById.isEmpty()) return null
+
+        return mapCountBasketsById.values.toList()
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.example.orderdeliver.data
 
 import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.domain.AddToBasketRepository
+import javax.inject.Singleton
 
 class DefaultAddToBasketRepository: AddToBasketRepository {
     override fun getPrice(price: Int,discount: Int?): Int {

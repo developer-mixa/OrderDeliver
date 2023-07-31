@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.RecyclerView
 import com.example.core.R
 
 fun showLog(message: String, tag: String = "MyLog"){
@@ -29,4 +30,9 @@ fun Fragment.replaceFragment(fragment: Fragment, @IdRes containerId: Int= com.ex
 
 fun <T>MutableLiveData<T>.share(): LiveData<T>{
     return this
+}
+
+fun <T>ArrayList<T>.setList(newList: List<T>){
+    this.clear()
+    this.addAll(newList)
 }

@@ -5,20 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.navigation.BaseScreen
 import com.example.orderdeliver.R
+import com.example.orderdeliver.databinding.FragmentBasketBinding
+import com.example.orderdeliver.presentation.views.viewBinding
 
 
-class BasketFragment : Fragment() {
+class BasketFragment : Fragment(R.layout.fragment_basket) {
 
+    private val binding: FragmentBasketBinding by viewBinding()
+    private val viewModel: BasketViewModel by viewModels()
     class Screen : BaseScreen
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_basket, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.button.setOnClickListener { viewModel.toMainMenu() }
     }
 }

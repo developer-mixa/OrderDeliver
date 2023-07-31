@@ -5,6 +5,7 @@ import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.data.models.FoodType
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 
+
 class FoodSource {
     private val foods = mutableListOf<FoodDataModel>(
         FoodDataModel(
@@ -60,20 +61,52 @@ class FoodSource {
             869,
             R.drawable.test_pizza_thrid,
             FoodType.FOOD
-        )
+        ),
+        FoodDataModel(
+            7,
+            "Клубничный коктейл",
+            "напиток, получаемый смешиванием нескольких компонентов. Чаще всего коктейли представляют собой омбинацию спиртных напитков.",
+            12f,
+            99,
+            R.drawable.test_cocteil,
+            FoodType.DRINK
+        ),
+        FoodDataModel(
+            8,
+            "Банановый коктейл",
+            "напиток, получаемый смешиванием нескольких компонентов. Чаще всего коктейли представляют собой омбинацию спиртных напитков.",
+            12f,
+            199,
+            R.drawable.test_cocteil_2,
+            FoodType.DRINK
+        ),
 
 
     )
+
+    private var lastId = 1
 
     private val typeFoods = mutableListOf<TypeFoodModel>(
-        TypeFoodModel(1,FoodType.ALL, true),
-        TypeFoodModel(2,FoodType.FOOD, false),
-        TypeFoodModel(3,FoodType.DRINK, false),
-        TypeFoodModel(4,FoodType.COMBO, false),
-        TypeFoodModel(5,FoodType.SAUCE, false),
-        TypeFoodModel(5,FoodType.SAUCE, false),
-        TypeFoodModel(5,FoodType.SAUCE, false),
+        TypeFoodModel(1,FoodType.ALL, "Всё",true),
+        TypeFoodModel(2,FoodType.FOOD, "Еда",false),
+        TypeFoodModel(3,FoodType.DRINK, "Коктейли",false),
+        TypeFoodModel(4,FoodType.COMBO, "Комбо",false),
+        TypeFoodModel(5,FoodType.SAUCE, "Соус",false),
+        TypeFoodModel(6,FoodType.SAUCE, "Соус",false),
+        TypeFoodModel(7,FoodType.SAUCE, "Соус",false),
     )
+
+    fun getTypeFoods(): List<TypeFoodModel> = typeFoods
+
+    fun setActivatedTypeFoodById(id: Int): MutableList<TypeFoodModel>? {
+        if (lastId == id) return null
+
+        typeFoods[lastId - 1] = typeFoods[lastId - 1].copy(isActivated = false)
+        typeFoods[id - 1] = typeFoods[id - 1].copy(isActivated = true)
+        lastId = id
+
+        return typeFoods
+    }
 
     fun getFoods(foodType: FoodType): List<FoodDataModel> {
         if (foodType == FoodType.ALL) return foods

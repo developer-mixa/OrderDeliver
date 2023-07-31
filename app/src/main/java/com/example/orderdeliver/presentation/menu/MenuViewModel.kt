@@ -1,7 +1,6 @@
 package com.example.orderdeliver.presentation.menu
 
 import androidx.lifecycle.MutableLiveData
-import com.example.navigation.BaseScreen
 import com.example.navigation.BaseViewModel
 import com.example.navigation.Navigator
 import com.example.orderdeliver.data.FoodSource
@@ -28,9 +27,18 @@ class MenuViewModel(
         _typeFoods.value = foodSource.getTypes()
     }
 
-    fun onAddToBasket() {
+    fun setStateTypesById(id: Int){
+        val newTypeFoods = foodSource.setActivatedTypeFoodById(id) ?: return
+        _typeFoods.value = newTypeFoods
+    }
 
-        navigator.launch(screen = AddToBasketFragment.Screen())
+    fun filterFoods(foodType: FoodType){
+        _foods.value = foodSource.getFoods(foodType)
+    }
+
+    fun onAddToBasket(foodDataModel: FoodDataModel) {
+
+        navigator.launch(screen = AddToBasketFragment.Screen(foodDataModel),addToBackStack = true, aboveAll = true)
     }
 
 }
