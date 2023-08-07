@@ -31,9 +31,21 @@ class DefaultBasketRepository @Inject constructor(): BasketRepository {
         mapCountBasketsById[foodDataModel.id] = BasketModel(foodDataModel, countById + 1)
     }
 
+    override fun removeBasket(id: Int) {
+        mapCountBasketsById.remove(id)
+    }
+
+    override fun minusOneBasket(id: Int) {
+        val countById = (mapCountBasketsById[id]?.count ?: 0)
+        if (mapCountBasketsById[id] == null || countById - 1 <= 0){
+            removeBasket(id)
+            return
+        }
+        mapCountBasketsById[id] = BasketModel(mapCountBasketsById[id]!!.foodDataModel, countById - 1)
+    }
+
     override fun getBaskets(): List<BasketModel>? {
         if (mapCountBasketsById.isEmpty()) return null
-
         return mapCountBasketsById.values.toList()
     }
 

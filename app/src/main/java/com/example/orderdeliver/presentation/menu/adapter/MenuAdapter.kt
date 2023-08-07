@@ -12,6 +12,7 @@ import com.example.orderdeliver.databinding.FoodItemBinding
 
 interface FoodActionState{
     fun select(foodDataModel: FoodDataModel)
+    fun addBasket(foodDataModel: FoodDataModel)
 }
 class MenuAdapter(private val foodActionState: FoodActionState): ListAdapter<FoodDataModel,MenuAdapter.MenuHolder>(MenuItemCallback()) {
 
@@ -34,6 +35,8 @@ class MenuAdapter(private val foodActionState: FoodActionState): ListAdapter<Foo
             descriptionFood.text = foodDataModel.description
             imageView.setImageResource(foodDataModel.imageResource)
             priceText.text = "от ${foodDataModel.price} $"
+
+            buttonAddBasket.setOnClickListener { foodActionState.addBasket(foodDataModel) }
 
             binding.root.setOnClickListener { foodActionState.select(foodDataModel) }
 

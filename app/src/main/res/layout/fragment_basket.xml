@@ -6,6 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".presentation.basket.BasketFragment">
 
+    <LinearLayout
+        android:id="@+id/mainContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/background_basket_color"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/buttonBuy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
@@ -31,25 +50,28 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="Корзина"
+        app:titleTextAppearance="@style/BoldDeliverTextStyle"
         app:titleTextColor="#000000" />
 
     <LinearLayout
+        android:id="@+id/emptyContainer"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imagePizza"
             android:layout_width="match_parent"
             android:layout_height="170dp"
             android:src="@drawable/pizza_if_zero" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textTitleEmptyMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -60,7 +82,7 @@
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/textDescEmptyMessage1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -70,7 +92,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/textDescEmptyMessage2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -80,7 +102,7 @@
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonToMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -89,5 +111,19 @@
             android:text="Перейти в меню"
             android:textSize="20sp" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonBuy"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="4dp"
+        android:backgroundTint="@color/add_to_color"
+        android:text="Оформить за 2481 $"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

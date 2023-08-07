@@ -90,4 +90,56 @@ class DefaultBasketRepositoryTest {
         assertNull(defaultBasketRepository.getBaskets())
     }
 
+    @Test
+    fun checkDeleteBasket(){
+        val food1 = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
+        val food2 = FoodDataModel(2, "Пирожок", "", 0f, 100, 0, FoodType.FOOD)
+
+        defaultBasketRepository.addBasket(food1)
+        defaultBasketRepository.addBasket(food2)
+        defaultBasketRepository.removeBasket(1)
+        defaultBasketRepository.removeBasket(2)
+
+        assertNull(defaultBasketRepository.getBaskets())
+    }
+
+    @Test
+    fun checkMinusBasketIfCountEqualsZeroRemovesProduct(){
+        val food1 = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
+        defaultBasketRepository.addBasket(food1)
+
+        defaultBasketRepository.minusOneBasket(1)
+
+        assertNull(defaultBasketRepository.getBaskets())
+    }
+
+    @Test
+    fun checkMinusBasket(){
+        val food1 = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
+        val food2 = FoodDataModel(2, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
+        defaultBasketRepository.addBasket(food1)
+        defaultBasketRepository.addBasket(food1)
+        defaultBasketRepository.addBasket(food2)
+        defaultBasketRepository.addBasket(food2)
+
+        defaultBasketRepository.minusOneBasket(1)
+
+        assertEquals(2,defaultBasketRepository.getBaskets()!!.size)
+    }
+
+    @Test
+    fun checkDoubleMinusBasketRemovesBasket(){
+        val food1 = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
+        val food2 = FoodDataModel(2, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
+        defaultBasketRepository.addBasket(food1)
+        defaultBasketRepository.addBasket(food1)
+        defaultBasketRepository.addBasket(food2)
+        defaultBasketRepository.addBasket(food2)
+
+        defaultBasketRepository.minusOneBasket(1)
+        defaultBasketRepository.minusOneBasket(1)
+
+        assertEquals(1,defaultBasketRepository.getBaskets()!!.size)
+    }
+
 }

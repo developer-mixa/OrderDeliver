@@ -25,11 +25,6 @@ class TypeFoodAdapter(private val typeFoodState: TypeFoodState) :
     RecyclerView.Adapter<TypeFoodAdapter.TypeFoodHolder>() {
 
     private var foods: ArrayList<TypeFoodModel> = ArrayList()
-        set(value) {
-            showLog("field $field")
-            showLog("value $value")
-            field = value
-        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TypeFoodHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -47,8 +42,6 @@ class TypeFoodAdapter(private val typeFoodState: TypeFoodState) :
     }
 
     fun updateList(newList: List<TypeFoodModel>){
-        //showLog("old " + foods)
-       // showLog("new " + newList)
         val diffCallback = TypeFoodDiffCallback(foods, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         foods.setList(newList)

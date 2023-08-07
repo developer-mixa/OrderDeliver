@@ -7,9 +7,21 @@
     <color name="type_subject_color_pressed">#8010C3</color>
     <color name="type_subject_color_default">#CACACA</color>
 
-    <color name="description_food_text_color">#616161</color>
-    <color name="price_background_color">#33FF7400</color>
+    <color name="description_food_text_color">#4A4A4A</color>
+
+    <color name="price_background_color_pressed">#33FF7400</color>
+    <color name="price_background_color_not_pressed">#FF6200</color>
+
+
     <color name="price_text_color">#F16E02</color>
+
+    <color name="counter_basket_color">#DBDADE</color>
+
+    <color name="background_basket_color">#D7D6DB</color>
+    <color name="add_to_color">#DE740E</color>
+
+    <color name="basket_grey_pressed">#A5A5A5</color>
+    <color name="basket_grey_not_pressed">#DBDADE</color>
 
 
 

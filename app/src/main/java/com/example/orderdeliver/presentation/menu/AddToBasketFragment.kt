@@ -2,19 +2,30 @@ package com.example.orderdeliver.presentation.menu
 
 import android.os.Bundle
 import android.view.View
-import com.example.navigation.BaseFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.navigation.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.databinding.FragmentAddToBasketBinding
-import com.example.orderdeliver.presentation.navigation.screenViewModel
+import com.example.orderdeliver.presentation.navigation.getBaseScreen
+import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class AddToBasketFragment : BaseFragment(R.layout.fragment_add_to_basket) {
+@AndroidEntryPoint
+class AddToBasketFragment : Fragment(R.layout.fragment_add_to_basket) {
 
     class Screen(val foodDataModel: FoodDataModel): BaseScreen
 
-    override val viewModel: AddToBasketViewModel by screenViewModel()
+    @Inject
+    lateinit var factory: AddToBasketViewModel.Factory
+
+    private val viewModel: AddToBasketViewModel by viewModels {
+        AddToBasketViewModel.provideBasketViewModelFactory(factory, screen = getBaseScreen() as Screen, navigator = getMainNavigator())
+    }
+
     private val binding by viewBinding<FragmentAddToBasketBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -23,8 +34,9 @@ class AddToBasketFragment : BaseFragment(R.layout.fragment_add_to_basket) {
         onClickListeners()
     }
 
-    private fun onClickListeners(){
-        binding.buttonBack.setOnClickListener { viewModel.back() }
+    private fun onClickListeners() = with(binding){
+        buttonBack.setOnClickListener { viewModel.back() }
+        buttonAddToBasket.setOnClickListener { viewModel.addBasket() }
     }
 
     private fun observeFoodModel(){

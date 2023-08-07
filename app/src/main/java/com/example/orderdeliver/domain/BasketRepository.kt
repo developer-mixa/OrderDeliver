@@ -11,6 +11,10 @@ interface BasketRepository {
 
     fun addBasket(foodDataModel: FoodDataModel)
 
+    fun removeBasket(id: Int)
+
+    fun minusOneBasket(id: Int)
+
     fun getBaskets(): List<BasketModel>?
 
 }
