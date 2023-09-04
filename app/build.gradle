@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -61,7 +62,11 @@ dependencies {
 
     implementation Libs.JetBrains.CoroutinesCore
 
+    implementation Libs.GitHub.CircularImageView
+
     testImplementation Libs.Testing.JUnit
+    testImplementation Libs.Testing.CoroutinesTest
+    testImplementation Libs.Testing.Mockk
 
     implementation project(Libs.Modules.Core)
     implementation project(Libs.Modules.Navigation)

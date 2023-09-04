@@ -27,7 +27,9 @@ buildscript {
                         HiltCompiler: "com.google.dagger:hilt-compiler:$hiltVersion",
                 ],
                 Testing: [
-                        JUnit: "junit:junit:4.13.2"
+                        JUnit: "junit:junit:4.13.2",
+                        CoroutinesTest: "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1",
+                        Mockk: "io.mockk:mockk:1.12.4"
                 ],
                 JetBrains: [
                         CoroutinesCore: "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4",
@@ -35,6 +37,9 @@ buildscript {
                 Modules: [
                         Navigation: ":navigation",
                         Core: ":core"
+                ],
+                GitHub: [
+                        CircularImageView: "com.mikhaellopez:circularimageview:4.3.1"
                 ]
         ]
 

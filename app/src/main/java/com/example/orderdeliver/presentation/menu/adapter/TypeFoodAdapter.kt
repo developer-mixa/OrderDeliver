@@ -1,9 +1,7 @@
 package com.example.orderdeliver.presentation.menu.adapter
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.res.ColorStateList
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +12,7 @@ import com.example.orderdeliver.R
 import com.example.orderdeliver.data.models.FoodType
 import com.example.orderdeliver.databinding.TypeSubjectItemBinding
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
-import com.example.orderdeliver.setList
-import com.example.orderdeliver.showLog
+import com.example.orderdeliver.utils.setList
 
 interface TypeFoodState {
     fun tap(id: Int, foodType: FoodType)
@@ -80,6 +77,7 @@ class TypeFoodAdapter(private val typeFoodState: TypeFoodState) :
     }
 
 }
+
 
 private class TypeFoodDiffCallback(
     val oldList: List<TypeFoodModel>,

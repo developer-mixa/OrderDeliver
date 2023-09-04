@@ -3,6 +3,7 @@ package com.example.orderdeliver.presentation.menu.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -34,9 +35,23 @@ class MenuAdapter(private val foodActionState: FoodActionState): ListAdapter<Foo
             nameFood.text = foodDataModel.name
             descriptionFood.text = foodDataModel.description
             imageView.setImageResource(foodDataModel.imageResource)
-            priceText.text = "от ${foodDataModel.price} $"
 
-            buttonAddBasket.setOnClickListener { foodActionState.addBasket(foodDataModel) }
+            val discountPrice = foodDataModel.price.toFloat() / 100 * foodDataModel.discount
+
+            val price = (foodDataModel.price - discountPrice).toInt()
+
+            priceText.text = "от $price $"
+
+            if (foodDataModel.discount != 0){
+                textDiscount.text = "${foodDataModel.price} $"
+            }
+
+            textDiscount.isVisible = foodDataModel.discount != 0
+
+            buttonAddBasket.setOnClickListener {
+                foodActionState.addBasket(foodDataModel)
+
+            }
 
             binding.root.setOnClickListener { foodActionState.select(foodDataModel) }
 

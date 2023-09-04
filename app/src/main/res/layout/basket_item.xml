@@ -75,6 +75,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageProduct" />
 
+    <TextView
+        android:id="@+id/textWithoutDiscount"
+        style="@style/BoldDeliverTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+
+        android:background="@drawable/diagonal_line"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textPrice"
+        app:layout_constraintStart_toEndOf="@+id/textPrice"
+        app:layout_constraintTop_toTopOf="@+id/textPrice" />
+
     <LinearLayout
         android:id="@+id/layoutCounter"
         android:layout_width="wrap_content"

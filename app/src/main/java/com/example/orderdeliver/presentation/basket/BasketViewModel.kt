@@ -9,25 +9,44 @@ import com.example.navigation.Navigator
 import com.example.orderdeliver.data.DefaultBasketRepository
 import com.example.orderdeliver.data.models.BasketModel
 import com.example.orderdeliver.data.models.FoodDataModel
+import com.example.orderdeliver.data.models.PaymentModel
+import com.example.orderdeliver.domain.BasketRepository
 import com.example.orderdeliver.domain.usecases.TapToMenuUseCase
-import com.example.orderdeliver.share
+import com.example.orderdeliver.utils.share
+import com.example.orderdeliver.utils.showLog
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class BasketViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
     @Assisted val screen: BaseScreen,
-    private val defaultBasketRepository: DefaultBasketRepository,
-    private val tapToMenuUseCase: TapToMenuUseCase
+    private val defaultBasketRepository: BasketRepository,
+    private val tapToMenuUseCase: TapToMenuUseCase,
+    private val def: BasketRepository
 ): ViewModel() {
 
     private val _baskets: MutableLiveData<List<BasketModel>?> = MutableLiveData<List<BasketModel>?>()
     val baskets = _baskets.share()
 
+    private val _payment: MutableLiveData<PaymentModel> = MutableLiveData()
+    val payment = _payment.share()
+
+    private val _wayPayment: MutableLiveData<String> = MutableLiveData()
+    val wayPayment = _wayPayment.share()
+
     init {
-        _baskets.value = defaultBasketRepository.getBaskets()
+        viewModelScope.launch {
+            defaultBasketRepository.listenBaskets().collect{
+                _baskets.value = it
+            }
+        }
+    }
+
+    fun getPayment() = viewModelScope.launch{
+        _payment.value = defaultBasketRepository.getPayment()
     }
 
     fun toMainMenu(){
@@ -42,15 +61,13 @@ class BasketViewModel @AssistedInject constructor(
         return defaultBasketRepository.priceForAll(_baskets.value!!)
     }
 
-    fun addCountItem(foodDataModel: FoodDataModel){
+    fun addCountItem(foodDataModel: FoodDataModel) = viewModelScope.launch{
         defaultBasketRepository.addBasket(foodDataModel)
-        _baskets.value = defaultBasketRepository.getBaskets()
 
     }
 
-    fun removeCountItem(id: Int){
+    fun removeCountItem(id: Int)= viewModelScope.launch{
         defaultBasketRepository.minusOneBasket(id)
-        _baskets.value = defaultBasketRepository.getBaskets()
     }
 
     @AssistedFactory

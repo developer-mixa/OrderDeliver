@@ -38,24 +38,46 @@
             android:textColor="@color/description_food_text_color"
             android:textSize="16sp" />
 
-        <FrameLayout
-            android:id="@+id/buttonAddBasket"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/food_item_background"
-            app:cardElevation="0dp">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/priceText"
+            <FrameLayout
+                android:id="@+id/buttonAddBasket"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="8dp"
-                android:text="от 579$"
-                android:textColor="@color/price_text_color"
+                android:background="@drawable/food_item_background"
+                app:cardElevation="0dp">
+
+                <TextView
+                    android:id="@+id/priceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:text="от 579$"
+                    android:textColor="@color/price_text_color"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/textDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/diagonal_line"
+                android:gravity="center"
+                android:text="339 $"
+                android:textColor="@color/discountColor"
                 android:textSize="16sp"
-                android:textStyle="bold" />
-        </FrameLayout>
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

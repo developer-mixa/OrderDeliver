@@ -19,10 +19,14 @@
 
     <color name="background_basket_color">#D7D6DB</color>
     <color name="add_to_color">#DE740E</color>
+    <color name="orange">#DE740E</color>
 
     <color name="basket_grey_pressed">#A5A5A5</color>
     <color name="basket_grey_not_pressed">#DBDADE</color>
+    <color name="red">#FC1100</color>
+    <color name="discountColor">#383838</color>
 
+    <color name="blue">#128DCC</color>
 
 
 </resources>

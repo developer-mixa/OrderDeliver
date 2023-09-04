@@ -9,8 +9,8 @@ import com.example.orderdeliver.R
 import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.data.models.FoodType
 import com.example.orderdeliver.databinding.FragmentMenuBinding
-import com.example.orderdeliver.getHorizontalLayoutManager
-import com.example.orderdeliver.getVerticalLayoutManager
+import com.example.orderdeliver.utils.getHorizontalLayoutManager
+import com.example.orderdeliver.utils.getVerticalLayoutManager
 import com.example.orderdeliver.presentation.menu.adapter.FoodActionState
 import com.example.orderdeliver.presentation.menu.adapter.MenuAdapter
 import com.example.orderdeliver.presentation.menu.adapter.TypeFoodAdapter

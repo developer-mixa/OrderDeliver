@@ -47,7 +47,9 @@ class AddToBasketFragment : Fragment(R.layout.fragment_add_to_basket) {
                     foodPhoto.setImageResource(foodDataModel.imageResource)
                     nameFood.text = foodDataModel.name
                     descFood.text = foodDataModel.description
+                    if (foodDataModel.discount == 0)
                     buttonAddToBasket.text = "В корзину за ${foodDataModel.price} $"
+                    else buttonAddToBasket.text = "В корзину за ${foodDataModel.priceWithDiscount} $"
                 }
             }
         }

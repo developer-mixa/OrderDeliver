@@ -4,10 +4,11 @@ import com.example.orderdeliver.R
 import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.data.models.FoodType
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
+import javax.inject.Inject
 
 
 class FoodSource {
-    private val foods = mutableListOf<FoodDataModel>(
+    private val foods = mutableListOf(
         FoodDataModel(
             1,
             "Пепперони",
@@ -15,7 +16,8 @@ class FoodSource {
             45f,
             579,
             R.drawable.test_pizza_one,
-            FoodType.FOOD
+            FoodType.FOOD,
+            50
         ),
         FoodDataModel(
             2,
@@ -42,7 +44,8 @@ class FoodSource {
             45f,
             579,
             R.drawable.test_pizza_one,
-            FoodType.FOOD
+            FoodType.FOOD,
+            50
         ),
         FoodDataModel(
             5,
@@ -69,7 +72,8 @@ class FoodSource {
             12f,
             99,
             R.drawable.test_cocteil,
-            FoodType.DRINK
+            FoodType.DRINK,
+            50
         ),
         FoodDataModel(
             8,

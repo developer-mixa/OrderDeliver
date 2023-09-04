@@ -6,28 +6,50 @@ import com.example.orderdeliver.data.models.BasketModel
 import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.data.models.FoodType
 import com.example.orderdeliver.domain.exceptions.ZeroItemException
-import org.junit.Assert
+import com.example.orderdeliver.utils.showLog
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Test
-import java.lang.AssertionError
-import java.lang.IllegalStateException
 
 class DefaultBasketRepositoryTest {
 
     private val defaultBasketRepository = DefaultBasketRepository()
 
     @Test
-    fun allPriceForSubject() {
-        val foodDataModel = FoodDataModel(12, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
-        val basketModel = BasketModel(foodDataModel, 5)
+    fun allPriceForSubjectWithoutDiscount() {
+        val foodDataModel = FoodDataModel(12, "Пицца", "", 0f, 10, 0, FoodType.FOOD)
+        val basketModel = BasketModel(foodDataModel, 2)
         val result = defaultBasketRepository.priceForSubject(basketModel)
 
-        assertEquals(500, result)
+        assertEquals(20, result)
     }
 
     @Test
-    fun priceForAll() {
+    fun getDiscountCountTest(){
+        val foodDataModel1 = FoodDataModel(12, "Пицца", "", 0f, 100, 0, FoodType.FOOD,50)
+        val basketModel1 = BasketModel(foodDataModel1, 5)
+     //   print(defaultBasketRepository.priceForSubject(basketModel1))
+        val foodDataModel2 = FoodDataModel(13, "Пицца", "", 0f, 50, 0, FoodType.FOOD,50)
+        val basketModel2 = BasketModel(foodDataModel2, 2)
+        print(defaultBasketRepository.priceForSubject(basketModel2))
+        val foodDataModel3 = FoodDataModel(14, "Пицца", "", 0f, 10, 0, FoodType.FOOD)
+        val basketModel3 = BasketModel(foodDataModel3, 2)
+    //    print(defaultBasketRepository.priceForSubject(basketModel3))
+        val list = listOf(basketModel1, basketModel2, basketModel3)
+
+        val discountSum = defaultBasketRepository.getDiscountCount(list)
+        //250 + 25 + 20 = 295 || 500 + 50 + 20 = 570
+
+        assertEquals(300, discountSum)
+    }
+
+
+    @Test
+    fun priceForAllWithoutDiscount() {
         val foodDataModel1 = FoodDataModel(12, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
         val basketModel1 = BasketModel(foodDataModel1, 5)
         val foodDataModel2 = FoodDataModel(13, "Пицца", "", 0f, 50, 0, FoodType.FOOD)
@@ -39,6 +61,39 @@ class DefaultBasketRepositoryTest {
         val result = defaultBasketRepository.priceForAll(list)
 
         assertEquals(570, result)
+    }
+
+    @Test
+    fun allPriceForSubjectWithDiscount() {
+        val foodDataModel = FoodDataModel(12, "Пицца", "", 0f, 50, 0, FoodType.FOOD,50)
+        val basketModel = BasketModel(foodDataModel, 1)
+        val result = defaultBasketRepository.priceForSubject(basketModel)
+
+        assertEquals(25, result)
+    }
+
+    @Test
+    fun allPriceForSubjectWithDiscountWithSomeCount() {
+        val foodDataModel = FoodDataModel(12, "Пицца", "", 0f, 100, 0, FoodType.FOOD,50)
+        val basketModel = BasketModel(foodDataModel, 5)
+        val result = defaultBasketRepository.priceForSubject(basketModel)
+
+        assertEquals(250, result)
+    }
+
+    @Test
+    fun priceForAllWithDiscount() {
+        val foodDataModel1 = FoodDataModel(12, "Пицца", "", 0f, 100, 0, FoodType.FOOD, 50)
+        val basketModel1 = BasketModel(foodDataModel1, 5) //250
+        val foodDataModel2 = FoodDataModel(13, "Пицца", "", 0f, 50, 0, FoodType.FOOD)
+        val basketModel2 = BasketModel(foodDataModel2, 1) //50
+        val foodDataModel3 = FoodDataModel(14, "Пицца", "", 0f, 10, 0, FoodType.FOOD)
+        val basketModel3 = BasketModel(foodDataModel3, 2) //20
+        val list = listOf(basketModel1, basketModel2, basketModel3)
+
+        val result = defaultBasketRepository.priceForAll(list)
+
+        assertEquals(320, result)
     }
 
     @Test
@@ -63,18 +118,21 @@ class DefaultBasketRepositoryTest {
     }
 
     @Test
-    fun addToBasketFreeSameItems(){
+    fun addToBasketFreeSameItems() = runTest{
         val food = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
 
         defaultBasketRepository.addBasket(food)
         defaultBasketRepository.addBasket(food)
         defaultBasketRepository.addBasket(food)
 
-        assertEquals(BasketModel(food,3), defaultBasketRepository.getBaskets()!![0] )
+        defaultBasketRepository.listenBaskets().collect{ list->
+            assertEquals(BasketModel(food,3), list[0] )
+        }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun addToBasketTwoDifferentItem(){
+    fun addToBasketTwoDifferentItem() = runTest(context = GlobalScope.coroutineContext){
         val food1 = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
         val food2 = FoodDataModel(2, "Пирожок", "", 0f, 100, 0, FoodType.FOOD)
 
@@ -82,16 +140,21 @@ class DefaultBasketRepositoryTest {
         defaultBasketRepository.addBasket(food1)
         defaultBasketRepository.addBasket(food2)
 
-        assertEquals(BasketModel(food1,2), defaultBasketRepository.getBaskets()!![0] )
-        assertEquals(BasketModel(food2,1), defaultBasketRepository.getBaskets()!![1] )
+        defaultBasketRepository.listenBaskets().collect{ list->
+            assertEquals(BasketModel(food1,2), list[0] )
+            assertEquals(BasketModel(food2,1), list[1] )
+        }
+
+
     }
     @Test
-    fun checkReturnNullIfZeroItems(){
-        assertNull(defaultBasketRepository.getBaskets())
+    fun checkReturnNullIfZeroItems() = runTest{
+        val basketsSize = defaultBasketRepository.listenBaskets().first().size
+        assertEquals(0,basketsSize)
     }
 
     @Test
-    fun checkDeleteBasket(){
+    fun checkDeleteBasket()= runTest{
         val food1 = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
         val food2 = FoodDataModel(2, "Пирожок", "", 0f, 100, 0, FoodType.FOOD)
 
@@ -100,35 +163,26 @@ class DefaultBasketRepositoryTest {
         defaultBasketRepository.removeBasket(1)
         defaultBasketRepository.removeBasket(2)
 
-        assertNull(defaultBasketRepository.getBaskets())
+        defaultBasketRepository.listenBaskets().collect{
+            assertEquals(0,it.size)
+        }
     }
 
     @Test
-    fun checkMinusBasketIfCountEqualsZeroRemovesProduct(){
+    fun checkMinusBasketIfCountEqualsZeroRemovesProduct() = runTest{
         val food1 = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
         defaultBasketRepository.addBasket(food1)
 
         defaultBasketRepository.minusOneBasket(1)
 
-        assertNull(defaultBasketRepository.getBaskets())
+        defaultBasketRepository.listenBaskets().collect{
+            assertEquals(0,it.size)
+        }
+
     }
 
     @Test
-    fun checkMinusBasket(){
-        val food1 = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
-        val food2 = FoodDataModel(2, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
-        defaultBasketRepository.addBasket(food1)
-        defaultBasketRepository.addBasket(food1)
-        defaultBasketRepository.addBasket(food2)
-        defaultBasketRepository.addBasket(food2)
-
-        defaultBasketRepository.minusOneBasket(1)
-
-        assertEquals(2,defaultBasketRepository.getBaskets()!!.size)
-    }
-
-    @Test
-    fun checkDoubleMinusBasketRemovesBasket(){
+    fun checkMinusBasket() = runTest{
         val food1 = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
         val food2 = FoodDataModel(2, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
         defaultBasketRepository.addBasket(food1)
@@ -137,9 +191,30 @@ class DefaultBasketRepositoryTest {
         defaultBasketRepository.addBasket(food2)
 
         defaultBasketRepository.minusOneBasket(1)
+
+        defaultBasketRepository.listenBaskets().collect{ list->
+            assertEquals(2,list.size)
+        }
+
+    }
+
+    @Test
+    fun checkDoubleMinusBasketRemovesBasket() = runTest{
+        val food1 = FoodDataModel(1, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
+        val food2 = FoodDataModel(2, "Пицца", "", 0f, 100, 0, FoodType.FOOD)
+        defaultBasketRepository.addBasket(food1)
+        defaultBasketRepository.addBasket(food1)
+        defaultBasketRepository.addBasket(food2)
+        defaultBasketRepository.addBasket(food2)
+
+        defaultBasketRepository.minusOneBasket(1)
         defaultBasketRepository.minusOneBasket(1)
 
-        assertEquals(1,defaultBasketRepository.getBaskets()!!.size)
+        defaultBasketRepository.listenBaskets().collect{ list->
+            assertEquals(1,list.size)
+        }
+
+
     }
 
 }

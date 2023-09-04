@@ -6,7 +6,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
-import com.example.orderdeliver.showLog
+import com.example.orderdeliver.utils.showLog
 import kotlin.reflect.KProperty
 
 inline fun <reified B : ViewBinding> Fragment.viewBinding(): ViewBindingDelegate<B> {
@@ -28,7 +28,6 @@ class ViewBindingDelegate<B : ViewBinding>(
         }else if (fragment.view != null){
             return getOnCreateBinding(viewLifecycleOwner)
         }else {
-            showLog((fragment.view != null).toString())
             throw IllegalStateException("Called before onViewCreated()")
         }
     }

@@ -3,35 +3,36 @@ package com.example.orderdeliver.presentation.menu
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.navigation.BaseScreen
-import com.example.navigation.BaseViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.navigation.Event
 import com.example.navigation.Navigator
-import com.example.orderdeliver.data.DefaultBasketRepository
+import com.example.orderdeliver.data.models.BasketModel
 import com.example.orderdeliver.data.models.FoodDataModel
+import com.example.orderdeliver.domain.BasketRepository
 import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
-import com.example.orderdeliver.share
-import com.example.orderdeliver.showLog
+import com.example.orderdeliver.utils.share
+import com.example.orderdeliver.utils.showLog
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.launch
 
 class AddToBasketViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
     @Assisted private val screen: AddToBasketFragment.Screen,
     private val addToBasketUseCase: AddToBasketUseCase,
+    private val basketRepository: BasketRepository
     ): ViewModel() {
 
     private val _initialFoodModelEvent = MutableLiveData<Event<FoodDataModel>>()
     val initialFoodModelEvent = _initialFoodModelEvent.share()
 
     init {
-        showLog(screen.foodDataModel.name)
         _initialFoodModelEvent.value = Event(screen.foodDataModel)
     }
 
     fun back() = navigator.goBack()
-    fun addBasket(){
+    fun addBasket() = viewModelScope.launch{
         addToBasketUseCase.invoke(screen.foodDataModel)
         navigator.goBack()
     }

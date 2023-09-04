@@ -2,6 +2,7 @@ package com.example.orderdeliver.presentation.main
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.navigation.BaseFragment
@@ -38,6 +39,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         viewModel.isTapToMain.observe(viewLifecycleOwner){toMain->
             if (toMain)binding.bottomNavigationView.selectedItemId = R.id.main_menu
         }
+
+        viewModel.isCountInBasket.observe(viewLifecycleOwner){basketCount->
+            binding.textCounterBasket.isVisible = basketCount != 0
+            binding.textCounterBasket.text = basketCount.toString()
+        }
+
     }
 
     private fun controlFragmentsByBottomView(){

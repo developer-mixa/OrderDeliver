@@ -1,5 +1,6 @@
 package com.example.orderdeliver.presentation.basket
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import com.example.orderdeliver.R
 import com.example.orderdeliver.data.models.BasketModel
 import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.databinding.BasketItemBinding
-import com.example.orderdeliver.setList
+import com.example.orderdeliver.utils.setList
 
 interface BasketCountState{
 
@@ -58,8 +59,7 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
         fun bind(basketModel: BasketModel) = with(binding){
             val foodDataModel = basketModel.foodDataModel
             imageProduct.setImageResource(foodDataModel.imageResource)
-            textCountSubjects.text = basketModel.count.toString()
-            textPrice.text = "${foodDataModel.price * basketModel.count} $"
+            settingPriceTexts(basketModel)
             textNameSubject.text = foodDataModel.name
 
             minusContainer.setOnClickListener {
@@ -71,11 +71,30 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
             }
 
         }
+
+        private fun settingPriceTexts(basket: BasketModel){
+            binding.textCountSubjects.text = basket.count.toString()
+            binding.textPrice.text = "${basket.foodDataModel.priceWithDiscount * basket.count} $"
+            if (basket.foodDataModel.discount != 0)
+                binding.textWithoutDiscount.text = "${basket.foodDataModel.price * basket.count} $"
+        }
+
         fun updateCount(bundle: Bundle) = with(binding){
-            if (bundle.containsKey("image")){
-                binding.textCountSubjects.text = bundle.getInt("image",0).toString()
+            if (bundle.containsKey(BASKET_KEY)){
+                val basket = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    bundle.getParcelable(BASKET_KEY, BasketModel::class.java)
+                } else {
+                    bundle.getParcelable(BASKET_KEY)
+                }
+                if (basket == null)return@with
+
+                settingPriceTexts(basket)
             }
         }
+    }
+
+    companion object{
+        const val BASKET_KEY = "basket_key"
     }
 
 }
@@ -83,7 +102,7 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
 fun generateBasketPayload(oldItem: BasketModel, newItem: BasketModel): Bundle?{
     val bundle = Bundle()
     if (oldItem.count != newItem.count){
-        bundle.putInt("image", newItem.count)
+        bundle.putParcelable(BasketAdapter.BASKET_KEY, newItem)
     }
     if (bundle.isEmpty) return null
     return bundle

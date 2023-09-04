@@ -6,30 +6,46 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.navigation.BaseScreen
 import com.example.navigation.Navigator
+import com.example.orderdeliver.R
 import com.example.orderdeliver.data.DefaultBasketRepository
+import com.example.orderdeliver.data.models.FoodDataModel
+import com.example.orderdeliver.data.models.FoodType
+import com.example.orderdeliver.domain.BasketRepository
 import com.example.orderdeliver.domain.usecases.TapToMenuUseCase
 import com.example.orderdeliver.presentation.basket.BasketFragment
 import com.example.orderdeliver.presentation.menu.MenuFragment
 import com.example.orderdeliver.presentation.profile.ProfileFragment
-import com.example.orderdeliver.share
+import com.example.orderdeliver.utils.share
+import com.example.orderdeliver.utils.showLog
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.assisted.AssistedFactory
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
     @Assisted screen: BaseScreen,
     private val tapToMenuUseCase: TapToMenuUseCase,
+    private val defaultBasketRepository: BasketRepository,
 ) : ViewModel() {
 
     private val _isTapToMain: MutableLiveData<Boolean> = MutableLiveData()
     val isTapToMain = _isTapToMain.share()
 
+    private val _isCountInBasket: MutableLiveData<Int> = MutableLiveData()
+    val isCountInBasket = _isCountInBasket.share()
+
     init {
         viewModelScope.launch {
+            showLog("init")
             tapToMenuUseCase.listen().collect {
                 _isTapToMain.value = it.getValue()
+            }
+        }
+        viewModelScope.launch {
+            defaultBasketRepository.listenAllCount().collect {
+                _isCountInBasket.value = it
             }
         }
     }
