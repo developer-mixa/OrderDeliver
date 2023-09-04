@@ -7,12 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.navigation.BaseScreen
 import com.example.navigation.BaseViewModel
 import com.example.navigation.Navigator
+import com.example.orderdeliver.R
 import com.example.orderdeliver.data.DefaultBasketRepository
 import com.example.orderdeliver.data.FoodSource
 import com.example.orderdeliver.data.models.BasketModel
 import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.data.models.FoodType
 import com.example.orderdeliver.domain.BasketRepository
+import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import com.example.orderdeliver.utils.share
@@ -58,7 +60,12 @@ class MenuViewModel @AssistedInject constructor(
     }
 
     fun addBasket(foodDataModel: FoodDataModel) = viewModelScope.launch{
-        addToBasketUseCase.invoke(foodDataModel)
+        try {
+            addToBasketUseCase.invoke(foodDataModel)
+        }catch (_: ReachedLimitException){
+            navigator.toast(R.string.reached_limit_text)
+        }
+
     }
 
     @AssistedFactory

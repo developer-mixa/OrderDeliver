@@ -25,5 +25,5 @@ interface BasketRepository {
 
     fun getDiscountCount(basketModels: List<BasketModel>): Int
 
-    suspend fun getPayment(): PaymentModel
+    suspend fun getPayment(): Container<PaymentModel>
 }

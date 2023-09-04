@@ -12,8 +12,4 @@ class DefaultAddToBasketRepository: AddToBasketRepository {
         result = result / 100 * discount
         return result.toInt()
     }
-
-    override fun add(foodDataModel: FoodDataModel): FoodDataModel {
-        TODO("Not yet implemented")
-    }
 }

@@ -4,8 +4,13 @@ import com.example.orderdeliver.data.models.BasketModel
 import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.data.models.PaymentModel
 import com.example.orderdeliver.domain.BasketRepository
+import com.example.orderdeliver.domain.Container
+import com.example.orderdeliver.domain.SuccessContainer
+import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.exceptions.ZeroItemException
+import com.example.orderdeliver.utils.showLog
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +26,7 @@ class DefaultBasketRepository @Inject constructor() : BasketRepository {
     private val mapCountBasketsById = mutableMapOf<Int, BasketModel>()
 
     private val listBasketsFlow = MutableSharedFlow<List<BasketModel>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
     private val allCountBaskets = MutableStateFlow(0)
 
     override fun priceForSubject(basketModel: BasketModel): Int {
@@ -48,6 +54,9 @@ class DefaultBasketRepository @Inject constructor() : BasketRepository {
 
     override suspend fun addBasket(foodDataModel: FoodDataModel) {
         val countById = (mapCountBasketsById[foodDataModel.id]?.count ?: 0)
+        if (countById >= foodDataModel.maxCount){
+            throw ReachedLimitException()
+        }
         mapCountBasketsById[foodDataModel.id] = BasketModel(foodDataModel, countById + 1)
         listBasketsFlow.emit(mapCountBasketsById.values.toList())
         allCountBaskets.emit(allCountBaskets.first() + 1)
@@ -98,11 +107,13 @@ class DefaultBasketRepository @Inject constructor() : BasketRepository {
         //return priceForAllWithoutDiscount(basketModels) - priceForAll(basketModels)
     }
 
-    override suspend fun getPayment(): PaymentModel {
+    override suspend fun getPayment(): Container<PaymentModel> {
 
         val baskets = listBasketsFlow.first()
 
-        return PaymentModel(
+        delay(1000)
+
+        val payment = PaymentModel(
             UUID.randomUUID().toString(),
             "Сочи, Улица Красная Горка, 18/2",
             "*8829",
@@ -111,6 +122,10 @@ class DefaultBasketRepository @Inject constructor() : BasketRepository {
             getDiscountCount(baskets),
             priceForAll(baskets)
 
+        )
+
+        return SuccessContainer(
+            payment
         )
     }
 

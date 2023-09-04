@@ -20,17 +20,20 @@ import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.data.models.PaymentModel
 import com.example.orderdeliver.databinding.BottomSheetBasketBinding
 import com.example.orderdeliver.databinding.FragmentBasketBinding
+import com.example.orderdeliver.domain.ErrorContainer
+import com.example.orderdeliver.domain.PendingContainer
+import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.presentation.navigation.getBaseScreen
 import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
 import com.example.orderdeliver.utils.getHeightIfGone
 import com.example.orderdeliver.utils.getVerticalLayoutManager
+import com.example.orderdeliver.utils.markButtonDisable
 import com.example.orderdeliver.utils.showLog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class BasketFragment : Fragment(R.layout.fragment_basket) {
@@ -129,13 +132,6 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
         dialog.show()
     }
 
-    private fun updatePeekHeight(behavior: BottomSheetBehavior<FrameLayout>, height: Int) {
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        behavior.peekHeight = height
-        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-    }
-
-
     private fun observe() {
         viewModel.baskets.observe(viewLifecycleOwner) { baskets ->
 
@@ -145,11 +141,29 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
             if (baskets != null) adapter.updateList(baskets)
         }
 
-        viewModel.payment.observe(viewLifecycleOwner) { payment ->
+        viewModel.payment.observe(viewLifecycleOwner) { resultPayment ->
 
-            showPayment(payment)
+            when(resultPayment){
+                is SuccessContainer<PaymentModel> -> {
+                    setLoadingStatePendingButton(true)
+                    showPayment(resultPayment.data)
+                }
+                is PendingContainer -> {
+                    setLoadingStatePendingButton(false)
+                }
+                is ErrorContainer -> {
+
+                }
+            }
+
+
         }
 
+    }
+
+    private fun setLoadingStatePendingButton(isLoaded: Boolean) = with(binding){
+        buttonBuy.markButtonDisable(isLoaded)
+        progressBarPayment.isVisible = !isLoaded
     }
 
     private fun setVisibilities(sizeIsZero: Boolean) = with(binding) {

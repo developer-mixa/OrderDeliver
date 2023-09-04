@@ -16,7 +16,8 @@ data class FoodDataModel(
     @DrawableRes val imageResource: Int,
     val foodType: FoodType,
     val discount: Int = 0,
-    val priceWithDiscount: Int = 0
+    val priceWithDiscount: Int = 0,
+    val maxCount: Int = 10000
 ): Parcelable
 
 

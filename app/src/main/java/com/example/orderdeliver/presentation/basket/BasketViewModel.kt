@@ -6,11 +6,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.navigation.BaseScreen
 import com.example.navigation.Navigator
+import com.example.orderdeliver.R
 import com.example.orderdeliver.data.DefaultBasketRepository
 import com.example.orderdeliver.data.models.BasketModel
 import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.data.models.PaymentModel
 import com.example.orderdeliver.domain.BasketRepository
+import com.example.orderdeliver.domain.Container
+import com.example.orderdeliver.domain.PendingContainer
+import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.usecases.TapToMenuUseCase
 import com.example.orderdeliver.utils.share
 import com.example.orderdeliver.utils.showLog
@@ -31,7 +35,7 @@ class BasketViewModel @AssistedInject constructor(
     private val _baskets: MutableLiveData<List<BasketModel>?> = MutableLiveData<List<BasketModel>?>()
     val baskets = _baskets.share()
 
-    private val _payment: MutableLiveData<PaymentModel> = MutableLiveData()
+    private val _payment: MutableLiveData<Container<PaymentModel>> = MutableLiveData()
     val payment = _payment.share()
 
     private val _wayPayment: MutableLiveData<String> = MutableLiveData()
@@ -46,6 +50,7 @@ class BasketViewModel @AssistedInject constructor(
     }
 
     fun getPayment() = viewModelScope.launch{
+        _payment.value = PendingContainer()
         _payment.value = defaultBasketRepository.getPayment()
     }
 
@@ -62,7 +67,12 @@ class BasketViewModel @AssistedInject constructor(
     }
 
     fun addCountItem(foodDataModel: FoodDataModel) = viewModelScope.launch{
-        defaultBasketRepository.addBasket(foodDataModel)
+        try {
+            defaultBasketRepository.addBasket(foodDataModel)
+        }catch (_: ReachedLimitException){
+            navigator.toast(R.string.reached_limit_text)
+        }
+
 
     }
 

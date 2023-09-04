@@ -17,7 +17,8 @@ class FoodSource {
             579,
             R.drawable.test_pizza_one,
             FoodType.FOOD,
-            50
+            50,
+            maxCount = 5
         ),
         FoodDataModel(
             2,

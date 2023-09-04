@@ -46,6 +46,7 @@
             android:layout_height="wrap_content">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardOrderStory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="10dp"
@@ -53,8 +54,15 @@
                 android:backgroundTint="@color/orange"
                 android:layout_marginBottom="8dp"
                 >
-
+                <TextView
+                    android:id="@+id/textCounterOrders"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:text="0"
+                    style="@style/NotificationTextStyleProfile"
+                    />
                 <ImageView
+                    android:id="@+id/imageOrderStory"
                     android:layout_margin="12dp"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
@@ -77,14 +85,23 @@
             android:layout_height="wrap_content">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardFav"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="10dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp"
                 >
+                <TextView
+                    android:id="@+id/textCounterFav"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:text="0"
+                    style="@style/NotificationTextStyleProfile"
+                    />
 
                 <ImageView
+                    android:id="@+id/imageFav"
                     android:layout_margin="12dp"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
@@ -108,14 +125,22 @@
             android:layout_height="wrap_content">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="10dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="8dp"
                 >
-
+                <TextView
+                    android:id="@+id/textCounterAddress"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:text="0"
+                    style="@style/NotificationTextStyleProfile"
+                    />
                 <ImageView
+                    android:id="@+id/imageAddress"
                     android:layout_margin="12dp"
                     android:layout_width="52dp"
                     android:layout_height="52dp"

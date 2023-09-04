@@ -58,9 +58,10 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
+        binding.selectCityCard.setOnClickListener {  }
     }
 
-    private fun initRecyclerView() {
+    private fun initRecyclerView() = with(binding) {
 
         viewModel.foods.observe(viewLifecycleOwner) { foods ->
             menuAdapter.submitList(foods)
@@ -70,12 +71,12 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
             typeFoodAdapter.updateList(types)
         }
 
-        binding.foodsRcView.layoutManager = getVerticalLayoutManager()
-        binding.foodsRcView.adapter = menuAdapter
+        foodsRcView.layoutManager = getVerticalLayoutManager()
+        foodsRcView.adapter = menuAdapter
 
-        binding.typesRcView.layoutManager = getHorizontalLayoutManager()
-        binding.typesRcView.setHasFixedSize(true)
-        binding.typesRcView.adapter = typeFoodAdapter
+        typesRcView.layoutManager = getHorizontalLayoutManager()
+        typesRcView.setHasFixedSize(true)
+        typesRcView.adapter = typeFoodAdapter
 
     }
 

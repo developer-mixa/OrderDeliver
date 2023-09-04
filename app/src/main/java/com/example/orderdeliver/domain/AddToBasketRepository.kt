@@ -6,6 +6,5 @@ interface AddToBasketRepository {
 
     fun getPrice(price: Int,discount: Int?): Int
 
-    fun add(foodDataModel: FoodDataModel): FoodDataModel
 
 }
