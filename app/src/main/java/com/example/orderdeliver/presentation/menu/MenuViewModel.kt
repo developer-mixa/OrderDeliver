@@ -16,6 +16,7 @@ import com.example.orderdeliver.data.models.FoodType
 import com.example.orderdeliver.domain.BasketRepository
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
+import com.example.orderdeliver.presentation.delivery.PlaceDeliveryFragment
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import com.example.orderdeliver.utils.share
 import com.example.orderdeliver.utils.showLog
@@ -66,6 +67,10 @@ class MenuViewModel @AssistedInject constructor(
             navigator.toast(R.string.reached_limit_text)
         }
 
+    }
+
+    fun launchToPlaceDelivery(){
+        navigator.launch(screen = PlaceDeliveryFragment.Screen(), addToBackStack = true, aboveAll = true)
     }
 
     @AssistedFactory

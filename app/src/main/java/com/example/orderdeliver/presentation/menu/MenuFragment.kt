@@ -58,7 +58,9 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
-        binding.selectCityCard.setOnClickListener {  }
+        binding.selectCityCard.setOnClickListener {
+            viewModel.launchToPlaceDelivery()
+        }
     }
 
     private fun initRecyclerView() = with(binding) {

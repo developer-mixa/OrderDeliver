@@ -40,6 +40,9 @@ buildscript {
                 ],
                 GitHub: [
                         CircularImageView: "com.mikhaellopez:circularimageview:4.3.1"
+                ],
+                Yandex: [
+                        MapsMobile: "com.yandex.android:maps.mobile:4.1.0-full"
                 ]
         ]
 

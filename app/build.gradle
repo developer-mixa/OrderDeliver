@@ -64,6 +64,8 @@ dependencies {
 
     implementation Libs.GitHub.CircularImageView
 
+    implementation Libs.Yandex.MapsMobile
+
     testImplementation Libs.Testing.JUnit
     testImplementation Libs.Testing.CoroutinesTest
     testImplementation Libs.Testing.Mockk

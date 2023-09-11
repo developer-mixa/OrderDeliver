@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".presentation.delivery.PlaceDeliveryFragment">
+
+
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageExit"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_close" />
+
+        <TextView
+            android:id="@+id/cityText"
+            style="@style/BoldDeliverTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Россия"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="34sp"
+        android:layout_marginTop="48dp"
+        android:layout_marginStart="16dp"
+        style="@style/BoldDeliverTextStyle"
+        android:text="Как будете \nзаказывать?" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="96dp"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/containerDeliver"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginEnd="36dp"
+            android:background="@drawable/choose_type_delivery_background_top">
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_deliver"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView2"
+                style="@style/BoldDeliverTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:letterSpacing="0.03"
+                android:text="Доставка"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+                app:layout_constraintStart_toEndOf="@+id/imageView4"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView6"
+                style="@style/BoldDeliverTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:letterSpacing="0.03"
+                android:text="До вашего адреса"
+                android:textColor="@color/grey"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView4"
+                app:layout_constraintTop_toTopOf="@+id/imageView4" />
+
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="32dp"
+                android:src="@drawable/ic_next"
+                app:layout_constraintBottom_toBottomOf="@+id/textView6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/containerRestaurant"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginEnd="36dp"
+            android:background="@drawable/choose_type_delivery_background_bottom">
+
+            <ImageView
+                android:id="@+id/imageView45"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_restaurant"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView22"
+                style="@style/BoldDeliverTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:letterSpacing="0.03"
+                android:text="В пиццерии"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView45"
+                app:layout_constraintStart_toEndOf="@+id/imageView45"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView66"
+                style="@style/BoldDeliverTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:letterSpacing="0.03"
+                android:text="С собой или в зале"
+                android:textColor="@color/grey"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView45"
+                app:layout_constraintTop_toTopOf="@+id/imageView45" />
+
+            <ImageView
+                android:id="@+id/imageView77"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="32dp"
+                android:src="@drawable/ic_next"
+                app:layout_constraintBottom_toBottomOf="@+id/textView66"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView22" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
