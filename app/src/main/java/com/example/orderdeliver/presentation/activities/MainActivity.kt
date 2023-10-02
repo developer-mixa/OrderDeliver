@@ -2,8 +2,13 @@ package com.example.orderdeliver.presentation.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.lifecycle.ViewModelProvider
+import com.example.navigation.BaseFragment
 import com.example.orderdeliver.R
 import com.example.orderdeliver.databinding.ActivityMainBinding
 import com.example.orderdeliver.presentation.main.MainFragment
@@ -26,7 +31,28 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null){
             navigator.launchFragment(this, MainFragment.Screen(), idFragment = R.id.fragmentMainContainer)
         }
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentCallbacks,false)
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentCallbacks)
+    }
+
+    private val fragmentCallbacks = object : FragmentManager.FragmentLifecycleCallbacks(){
+        override fun onFragmentViewCreated(
+            fm: FragmentManager,
+            f: Fragment,
+            v: View,
+            savedInstanceState: Bundle?
+        ) {
+
+            super.onFragmentViewCreated(fm, f, v, savedInstanceState)
+            val result = navigator.result.value ?: return
+            if (f is BaseFragment){
+                f.viewModel.onResult(result)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

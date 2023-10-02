@@ -7,6 +7,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.navigation.BaseFragment
 import com.example.navigation.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.databinding.FragmentChooseAdressBinding
@@ -36,12 +37,12 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class ChooseAddressFragment : Fragment(R.layout.fragment_choose_adress), CameraListener{
+class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), CameraListener{
 
     private val binding: FragmentChooseAdressBinding by viewBinding()
     class Screen : BaseScreen
 
-    private val viewModel: ChooseAddressViewModel by viewModels {
+    override val viewModel: ChooseAddressViewModel by viewModels {
         ChooseAddressViewModel.provideChooseAddressViewModel(factory, getMainNavigator(), getBaseScreen())
     }
 

@@ -11,7 +11,7 @@ import com.example.orderdeliver.databinding.CityItemBinding
 import com.example.orderdeliver.presentation.delivery.models.CityModel
 import com.example.orderdeliver.utils.setList
 
-class CityAdapter : RecyclerView.Adapter<CityAdapter.CityHolder>() {
+class CityAdapter(private val cityListener: SelectCityListener) : RecyclerView.Adapter<CityAdapter.CityHolder>() {
 
     private val suggests =  ArrayList<CityModel>()
 
@@ -23,14 +23,17 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.CityHolder>() {
 
     override fun getItemCount(): Int = suggests.size
 
-    override fun onBindViewHolder(holder: CityHolder, position: Int) = holder.bind(suggests[position])
+    override fun onBindViewHolder(holder: CityHolder, position: Int) = holder.bind(suggests[position], cityListener)
 
     class CityHolder(view: View) : ViewHolder(view){
         private val binding: CityItemBinding = CityItemBinding.bind(view)
 
-        fun bind(cityModel: CityModel) = with(binding){
+        fun bind(cityModel: CityModel, selectCityListener: SelectCityListener) = with(binding){
             textTitle.text = cityModel.title
             textSubTitle.text = cityModel.subTitle
+            cardCity.setOnClickListener {
+                selectCityListener.onTap(cityModel)
+            }
         }
 
     }
@@ -40,6 +43,10 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.CityHolder>() {
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         suggests.setList(newList)
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    interface SelectCityListener {
+        fun onTap(cityModel: CityModel)
     }
 
 }

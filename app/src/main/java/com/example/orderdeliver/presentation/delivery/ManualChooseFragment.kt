@@ -13,12 +13,13 @@ import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.domain.takeSuccess
+import com.example.orderdeliver.presentation.delivery.models.CityModel
 import com.example.orderdeliver.presentation.navigation.screenViewModel
 import com.example.orderdeliver.presentation.views.viewBinding
 import com.example.orderdeliver.utils.getVerticalLayoutManager
 import com.example.orderdeliver.utils.showLog
 
-class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose) {
+class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose), CityAdapter.SelectCityListener {
 
     class Screen : BaseScreen
 
@@ -26,7 +27,7 @@ class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose) {
 
     override val viewModel by screenViewModel<ManualChooseViewModel>()
 
-    private val cityAdapter: CityAdapter = CityAdapter()
+    private val cityAdapter: CityAdapter = CityAdapter(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,6 +54,11 @@ class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose) {
 
     }
 
+    override fun onTap(cityModel: CityModel) {
+        showLog("sign in " + cityModel.id)
+        viewModel.goBack(cityModel)
+    }
+
     private fun observe() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.suggests.collect { result ->
@@ -66,7 +72,7 @@ class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose) {
                         binding.rcView.isVisible = !isEmptyCities
                         binding.textStatus.isVisible = isEmptyCities
 
-                        if (isEmptyCities && binding.edAddress.text.toString().isNotBlank()){
+                        if (isEmptyCities && binding.edAddress.text.toString().isBlank()){
                             binding.textStatus.text = "Начните вводить адрес"
                         }else{
                             binding.textStatus.text = "Не можем найти такой адрес :("
@@ -81,5 +87,7 @@ class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose) {
             }
         }
     }
+
+
 
 }

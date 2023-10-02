@@ -10,6 +10,7 @@ import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.domain.exceptions.SuggestException
 import com.example.orderdeliver.domain.takeSuccess
 import com.example.orderdeliver.presentation.delivery.models.CityModel
+import com.example.orderdeliver.utils.showLog
 import com.yandex.mapkit.geometry.BoundingBox
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.search.SearchFactory
@@ -65,8 +66,8 @@ class ManualChooseViewModel(
 
     }
 
-    fun goBack(){
-        navigator.goBack(_suggests.value.takeSuccess())
+    fun goBack(cityModel: CityModel? = null){
+        navigator.goBack(cityModel)
     }
 
     private fun emitSuggests(suggests: Container<List<CityModel>>) = viewModelScope.launch {

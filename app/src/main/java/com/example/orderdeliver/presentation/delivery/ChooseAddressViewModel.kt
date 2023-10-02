@@ -3,6 +3,7 @@ package com.example.orderdeliver.presentation.delivery
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.navigation.BaseScreen
 import com.example.navigation.BaseViewModel
+import com.example.navigation.Event
 import com.example.navigation.Navigator
 import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.AddressRepository
@@ -17,7 +19,9 @@ import com.example.orderdeliver.domain.Container
 import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
+import com.example.orderdeliver.presentation.delivery.models.CityModel
 import com.example.orderdeliver.utils.share
+import com.example.orderdeliver.utils.showLog
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.geometry.Point
@@ -38,8 +42,6 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-//Taks: progress bar on button || when onPressed data about map changes
-
 class ChooseAddressViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
     @Assisted screen: BaseScreen,
@@ -54,10 +56,6 @@ class ChooseAddressViewModel @AssistedInject constructor(
 
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var searchManager: SearchManager = SearchFactory.getInstance().createSearchManager(SearchManagerType.ONLINE)
-
-
-
-
 
     private val searchListener = object : Session.SearchListener {
         override fun onSearchResponse(response: Response) {
@@ -83,6 +81,17 @@ class ChooseAddressViewModel @AssistedInject constructor(
 
     init {
         _address.value = PendingContainer()
+    }
+
+    override fun onResult(result: Any) {
+        super.onResult(result)
+        if (result is Event<*>){
+            val rs = result.getValue()
+            rs ?: return
+            if(rs is CityModel){
+                showLog((rs as CityModel).id)
+            }
+        }
     }
 
     fun submitSearch(point: Point){
