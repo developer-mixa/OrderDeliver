@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
             navigator.launchFragment(this, MainFragment.Screen(), idFragment = R.id.fragmentMainContainer)
         }
 
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

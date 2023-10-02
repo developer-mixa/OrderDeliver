@@ -16,3 +16,4 @@ inline fun <reified T : Throwable> catch(block: () -> Unit): T {
     }
     throw AssertionError("No expected exception")
 }
+

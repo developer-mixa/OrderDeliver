@@ -73,6 +73,10 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
             typeFoodAdapter.updateList(types)
         }
 
+        viewModel.currentCity.observe(viewLifecycleOwner){ currentCity ->
+            cityText.text = currentCity
+        }
+
         foodsRcView.layoutManager = getVerticalLayoutManager()
         foodsRcView.adapter = menuAdapter
 

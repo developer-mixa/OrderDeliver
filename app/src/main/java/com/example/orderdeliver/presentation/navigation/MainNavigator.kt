@@ -7,6 +7,7 @@ import android.transition.TransitionSet
 import android.view.Gravity
 import android.widget.Toast
 import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -32,6 +33,7 @@ class MainNavigator(
     private val _result = MutableLiveData<Event<Any>>()
     val result: LiveData<Event<Any>> = _result
 
+
     override fun launch(screen: BaseScreen, addToBackStack: Boolean , aboveAll: Boolean) = whenActivityActive{
         it as MainActivity
         if (!aboveAll)launchFragment(it, screen, addToBackStack)
@@ -55,10 +57,12 @@ class MainNavigator(
         Toast.makeText(getApplication(), messageRes, Toast.LENGTH_LONG).show()
     }
 
-
-
     override fun toast(messageString: String) {
         Toast.makeText(getApplication(), messageString, Toast.LENGTH_LONG).show()
+    }
+
+    override fun activityScope(block: (AppCompatActivity) -> Unit) = whenActivityActive{
+        block(it)
     }
 
     fun launchFragment(activity: MainActivity, screen: BaseScreen, addToBackStack: Boolean = false, @IdRes idFragment: Int = R.id.fragmentContainer){

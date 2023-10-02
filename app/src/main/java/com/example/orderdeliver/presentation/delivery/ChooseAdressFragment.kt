@@ -1,126 +1,130 @@
 package com.example.orderdeliver.presentation.delivery
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.PointF
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.navigation.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.databinding.FragmentChooseAdressBinding
+import com.example.orderdeliver.domain.ErrorContainer
+import com.example.orderdeliver.domain.PendingContainer
+import com.example.orderdeliver.domain.SuccessContainer
+import com.example.orderdeliver.presentation.navigation.getBaseScreen
+import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
+import com.example.orderdeliver.utils.markButtonDisable
 import com.example.orderdeliver.utils.showLog
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
-import com.yandex.mapkit.location.FilteringMode
-import com.yandex.mapkit.location.Location
-import com.yandex.mapkit.location.LocationListener
-import com.yandex.mapkit.location.LocationStatus
 import com.yandex.mapkit.map.CameraListener
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.CameraUpdateReason
+import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.InputListener
 import com.yandex.mapkit.map.Map
-import com.yandex.mapkit.search.Address
-import com.yandex.mapkit.search.Address.Component.Kind
-import com.yandex.mapkit.search.Response
-import com.yandex.mapkit.search.SearchFactory
-import com.yandex.mapkit.search.SearchManager
-import com.yandex.mapkit.search.SearchManagerType
-import com.yandex.mapkit.search.SearchOptions
-import com.yandex.mapkit.search.Session
-import com.yandex.mapkit.search.ToponymObjectMetadata
-import java.nio.file.Files.move
+import com.yandex.mapkit.map.MapObjectCollection
+import com.yandex.mapkit.map.PlacemarkMapObject
+import com.yandex.mapkit.map.RotationType
+import com.yandex.runtime.image.ImageProvider
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
-class ChooseAddressFragment : Fragment(R.layout.fragment_choose_adress), CameraListener {
+@AndroidEntryPoint
+class ChooseAddressFragment : Fragment(R.layout.fragment_choose_adress), CameraListener{
 
     private val binding: FragmentChooseAdressBinding by viewBinding()
+    class Screen : BaseScreen
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val viewModel: ChooseAddressViewModel by viewModels {
+        ChooseAddressViewModel.provideChooseAddressViewModel(factory, getMainNavigator(), getBaseScreen())
+    }
 
-    private lateinit var searchManager: SearchManager
-    private lateinit var searchSession: Session
+    @Inject lateinit var factory: ChooseAddressViewModel.Factory
 
-    class Screen: BaseScreen
-
+    private val scaleMapAnimation = Animation(Animation.Type.SMOOTH, 3f)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         MapKitFactory.initialize(requireContext())
-        requestLocationPermission()
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        getLastKnownLocation()
-        searchManager = SearchFactory.getInstance().createSearchManager(SearchManagerType.ONLINE)
-        binding.mapView.map.addInputListener(inputListener)
-        binding.mapView.map.addCameraListener(this)
+
+
+        viewModel.requestLocationPermission()
+        viewModel.getCurrentLocation()
+
+        observer()
+
+        init()
+
     }
 
-    @SuppressLint("MissingPermission")
-    private fun getLastKnownLocation() {
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location ->
-                if (location != null) {
-                    binding.mapView.map.move(CameraPosition(Point(location.latitude, location.longitude), 11.0f, 0.0f,0.0f),
-                        Animation(Animation.Type.SMOOTH, 2f), null)
+
+    private fun observer() {
+        viewModel.currentLocation.observe(viewLifecycleOwner) { location ->
+            moveCameraToOurPosition(location)
+        }
+        viewModel.address.observe(viewLifecycleOwner) { result ->
+
+            when(result){
+                is SuccessContainer -> {
+                    setLoadingStatePendingButton(true)
+                    binding.addressEditText.setText(result.data)
                 }
+                is PendingContainer -> {
+                    setLoadingStatePendingButton(false)
+                }
+                is ErrorContainer -> {
 
+                }
             }
+        }
     }
 
-    private val searchListener = object : Session.SearchListener {
-        override fun onSearchResponse(response: Response) {
-            val street = getNameKindComponent(response, Kind.STREET)
-            val house = getNameKindComponent(response, Kind.HOUSE)
-            val city = getNameKindComponent(response, Kind.LOCALITY)
+    private fun setLoadingStatePendingButton(isLoaded: Boolean) = with(binding){
+        buttonContinue.markButtonDisable(isLoaded)
+        progressBar.isVisible = !isLoaded
+    }
 
-            val doneText = "$city, $street, $house"
-
-            binding.addressEditText.setText(doneText)
+    private fun init() = with(binding) {
+        imageBack.setOnClickListener {
+            viewModel.goBack()
         }
 
-        override fun onSearchError(p0: com.yandex.runtime.Error) {}
+        buttonContinue.setOnClickListener {
+            viewModel.saveAddress(addressEditText.text.toString())
+        }
+
+        addressEditText.setOnClickListener {
+            viewModel.manuallyChooseAddress()
+        }
+
+        chooseCurrentLocationButton.setOnClickListener {
+            viewModel.getCurrentLocation()
+        }
+
+        mapView.map.addInputListener(inputListener)
+        mapView.map.addCameraListener(this@ChooseAddressFragment)
     }
 
-    private fun getNameKindComponent(response: Response, kind: Kind, messageIfNotFound: String = "-"): String{
-        return response.collection.children.firstOrNull()?.obj
-            ?.metadataContainer
-            ?.getItem(ToponymObjectMetadata::class.java)
-            ?.address
-            ?.components
-            ?.firstOrNull { it.kinds.contains(kind)}
-            ?.name ?: messageIfNotFound
+    private fun moveCameraToOurPosition(location: android.location.Location) {
+        binding.mapView.map.move(
+            CameraPosition(Point(location.latitude, location.longitude), MAP_ZOOM, MAP_AZIMUTH, MAP_TILT),
+            scaleMapAnimation, null
+        )
     }
 
-    private val inputListener = object : InputListener{
+
+    private val inputListener = object : InputListener {
         override fun onMapTap(map: Map, point: Point) {
-            searchSession = searchManager.submit(point, 20, SearchOptions(), searchListener)
-
+            viewModel.submitSearch(point)
         }
 
-        override fun onMapLongTap(map: Map, p1: Point) {
-
-        }
-
-    }
-
-    private fun requestLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 0)
-        }
+        override fun onMapLongTap(map: Map, p1: Point) {}
     }
 
     override fun onStop() {
@@ -141,9 +145,19 @@ class ChooseAddressFragment : Fragment(R.layout.fragment_choose_adress), CameraL
         cameraUpdateReason: CameraUpdateReason,
         isFinish: Boolean,
     ) {
-        if (cameraUpdateReason == CameraUpdateReason.APPLICATION && isFinish){
-            searchSession = searchManager.submit(cameraPosition.target, 20, SearchOptions(), searchListener)
+        if (cameraUpdateReason == CameraUpdateReason.APPLICATION && isFinish) {
+            viewModel.submitSearch(cameraPosition.target)
+        }else if(cameraUpdateReason == CameraUpdateReason.GESTURES){
+            setLoadingStatePendingButton(true)
         }
+
+    }
+
+
+    private companion object{
+        const val MAP_ZOOM = 19.0f
+        const val MAP_AZIMUTH = 0.0f
+        const val MAP_TILT = 0.0F
     }
 
 }

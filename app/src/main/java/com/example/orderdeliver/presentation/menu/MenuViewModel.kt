@@ -16,6 +16,7 @@ import com.example.orderdeliver.data.models.FoodType
 import com.example.orderdeliver.domain.BasketRepository
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
+import com.example.orderdeliver.domain.usecases.GetCurrentCityUseCase
 import com.example.orderdeliver.presentation.delivery.PlaceDeliveryFragment
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import com.example.orderdeliver.utils.share
@@ -23,13 +24,15 @@ import com.example.orderdeliver.utils.showLog
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MenuViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
     @Assisted screen: BaseScreen,
     private val basketRepository: BasketRepository,
-    private val addToBasketUseCase: AddToBasketUseCase
+    private val addToBasketUseCase: AddToBasketUseCase,
+    private val getCurrentCityUseCase: GetCurrentCityUseCase
 ) : BaseViewModel() {
 
     private val foodSource = FoodSource()
@@ -40,9 +43,19 @@ class MenuViewModel @AssistedInject constructor(
     private val _typeFoods: MutableLiveData<List<TypeFoodModel>> by lazy { MutableLiveData() }
     val typeFoods = _typeFoods.share()
 
+    private val _currentCity: MutableLiveData<String> by lazy { MutableLiveData() }
+    val currentCity = _currentCity.share()
+
     init {
         _foods.value = foodSource.getFoods(FoodType.ALL)
         _typeFoods.value = foodSource.getTypes()
+
+        viewModelScope.launch {
+            getCurrentCityUseCase.listen().collect{
+                _currentCity.value = it
+            }
+        }
+
     }
 
     fun setStateTypesById(id: Int){

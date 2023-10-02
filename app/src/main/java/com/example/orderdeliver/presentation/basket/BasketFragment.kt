@@ -143,14 +143,16 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
 
         viewModel.payment.observe(viewLifecycleOwner) { resultPayment ->
 
-            when(resultPayment){
+            when (resultPayment) {
                 is SuccessContainer<PaymentModel> -> {
                     setLoadingStatePendingButton(true)
                     showPayment(resultPayment.data)
                 }
+
                 is PendingContainer -> {
                     setLoadingStatePendingButton(false)
                 }
+
                 is ErrorContainer -> {
 
                 }
@@ -161,7 +163,7 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
 
     }
 
-    private fun setLoadingStatePendingButton(isLoaded: Boolean) = with(binding){
+    private fun setLoadingStatePendingButton(isLoaded: Boolean) = with(binding) {
         buttonBuy.markButtonDisable(isLoaded)
         progressBarPayment.isVisible = !isLoaded
     }

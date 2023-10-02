@@ -42,7 +42,9 @@
         app:layout_constraintBottom_toTopOf="@+id/usernameTextInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" >
+
+    </com.yandex.mapkit.mapview.MapView>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/usernameTextInput"
@@ -64,6 +66,8 @@
             android:id="@+id/addressEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:lines="1" />
@@ -83,5 +87,41 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+
+        android:layout_marginStart="24dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/orange"
+        android:indeterminateTintMode="src_atop"
+        android:interpolator="@android:interpolator/linear"
+        android:progressTintMode="screen"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonContinue"
+        app:layout_constraintStart_toStartOf="@+id/buttonContinue"
+        app:layout_constraintTop_toTopOf="@+id/buttonContinue" />
+
+    <FrameLayout
+        android:id="@+id/chooseCurrentLocationButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/choose_current_location_backround"
+        android:elevation="6dp"
+        app:cardElevation="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/mapView"
+        app:layout_constraintEnd_toEndOf="@+id/mapView">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_select_current_location" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
