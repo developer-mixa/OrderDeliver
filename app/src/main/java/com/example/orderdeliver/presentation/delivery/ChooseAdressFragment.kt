@@ -37,16 +37,22 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), CameraListener{
+class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), CameraListener {
 
     private val binding: FragmentChooseAdressBinding by viewBinding()
+
     class Screen : BaseScreen
 
     override val viewModel: ChooseAddressViewModel by viewModels {
-        ChooseAddressViewModel.provideChooseAddressViewModel(factory, getMainNavigator(), getBaseScreen())
+        ChooseAddressViewModel.provideChooseAddressViewModel(
+            factory,
+            getMainNavigator(),
+            getBaseScreen()
+        )
     }
 
-    @Inject lateinit var factory: ChooseAddressViewModel.Factory
+    @Inject
+    lateinit var factory: ChooseAddressViewModel.Factory
 
     private val scaleMapAnimation = Animation(Animation.Type.SMOOTH, 3f)
 
@@ -55,8 +61,9 @@ class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), Cam
         MapKitFactory.initialize(requireContext())
 
 
-        viewModel.requestLocationPermission()
         viewModel.getCurrentLocation()
+
+        viewModel.requestLocationPermission()
 
         observer()
 
@@ -67,18 +74,22 @@ class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), Cam
 
     private fun observer() {
         viewModel.currentLocation.observe(viewLifecycleOwner) { location ->
+            showLog("current location: ")
+
             moveCameraToOurPosition(location)
         }
         viewModel.address.observe(viewLifecycleOwner) { result ->
 
-            when(result){
+            when (result) {
                 is SuccessContainer -> {
                     setLoadingStatePendingButton(true)
                     binding.addressEditText.setText(result.data)
                 }
+
                 is PendingContainer -> {
                     setLoadingStatePendingButton(false)
                 }
+
                 is ErrorContainer -> {
 
                 }
@@ -86,7 +97,7 @@ class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), Cam
         }
     }
 
-    private fun setLoadingStatePendingButton(isLoaded: Boolean) = with(binding){
+    private fun setLoadingStatePendingButton(isLoaded: Boolean) = with(binding) {
         buttonContinue.markButtonDisable(isLoaded)
         progressBar.isVisible = !isLoaded
     }
@@ -112,9 +123,9 @@ class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), Cam
         mapView.map.addCameraListener(this@ChooseAddressFragment)
     }
 
-    private fun moveCameraToOurPosition(location: android.location.Location) {
+    private fun moveCameraToOurPosition(location: Point) {
         binding.mapView.map.move(
-            CameraPosition(Point(location.latitude, location.longitude), MAP_ZOOM, MAP_AZIMUTH, MAP_TILT),
+            CameraPosition(location, MAP_ZOOM, MAP_AZIMUTH, MAP_TILT),
             scaleMapAnimation, null
         )
     }
@@ -148,14 +159,14 @@ class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), Cam
     ) {
         if (cameraUpdateReason == CameraUpdateReason.APPLICATION && isFinish) {
             viewModel.submitSearch(cameraPosition.target)
-        }else if(cameraUpdateReason == CameraUpdateReason.GESTURES){
+        } else if (cameraUpdateReason == CameraUpdateReason.GESTURES) {
             setLoadingStatePendingButton(true)
         }
 
     }
 
 
-    private companion object{
+    private companion object {
         const val MAP_ZOOM = 19.0f
         const val MAP_AZIMUTH = 0.0f
         const val MAP_TILT = 0.0F

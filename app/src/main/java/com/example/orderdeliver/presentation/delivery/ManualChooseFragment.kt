@@ -12,7 +12,6 @@ import com.example.orderdeliver.databinding.FragmentManualChooseBinding
 import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
-import com.example.orderdeliver.domain.takeSuccess
 import com.example.orderdeliver.presentation.delivery.models.CityModel
 import com.example.orderdeliver.presentation.navigation.screenViewModel
 import com.example.orderdeliver.presentation.views.viewBinding
@@ -55,7 +54,7 @@ class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose), City
     }
 
     override fun onTap(cityModel: CityModel) {
-        showLog("sign in " + cityModel.id)
+        showLog("sign in " + cityModel.uri)
         viewModel.goBack(cityModel)
     }
 

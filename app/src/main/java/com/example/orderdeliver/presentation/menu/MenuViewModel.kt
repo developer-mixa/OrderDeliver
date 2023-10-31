@@ -32,10 +32,9 @@ class MenuViewModel @AssistedInject constructor(
     @Assisted screen: BaseScreen,
     private val basketRepository: BasketRepository,
     private val addToBasketUseCase: AddToBasketUseCase,
-    private val getCurrentCityUseCase: GetCurrentCityUseCase
+    private val getCurrentCityUseCase: GetCurrentCityUseCase,
+    private val foodSource: FoodSource
 ) : BaseViewModel() {
-
-    private val foodSource = FoodSource()
 
     private val _foods: MutableLiveData<List<FoodDataModel>> by lazy { MutableLiveData() }
     val foods = _foods.share()

@@ -8,6 +8,7 @@ buildscript {
 
         hiltVersion = "2.44"
         navVersion = "2.4.0"
+        okhttp_version = "4.9.3"
 
         Libs = [
                 Android: [
@@ -43,6 +44,11 @@ buildscript {
                 ],
                 Yandex: [
                         MapsMobile: "com.yandex.android:maps.mobile:4.1.0-full"
+                ],
+                Http: [
+                        OkHttp: "com.squareup.okhttp3:okhttp:$okhttp_version",
+                        LoggingInterceptor: "com.squareup.okhttp3:logging-interceptor:$okhttp_version",
+                        GoogleGson: "com.google.code.gson:gson:2.9.0"
                 ]
         ]
 

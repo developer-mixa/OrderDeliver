@@ -2,6 +2,7 @@ package com.example.orderdeliver.data.models
 
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
+import androidx.versionedparcelable.NonParcelField
 import kotlinx.parcelize.Parcelize
 
 enum class FoodType { DRINK, FOOD, COMBO, SAUCE, ALL }
@@ -17,7 +18,8 @@ data class FoodDataModel(
     val foodType: FoodType,
     val discount: Int = 0,
     val priceWithDiscount: Int = 0,
-    val maxCount: Int = 10000
+    val maxCount: Int = 10000,
+    val options: List<FoodOption>? = null
 ): Parcelable
 
 

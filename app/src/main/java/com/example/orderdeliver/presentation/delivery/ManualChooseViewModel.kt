@@ -8,22 +8,23 @@ import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.domain.exceptions.SuggestException
-import com.example.orderdeliver.domain.takeSuccess
 import com.example.orderdeliver.presentation.delivery.models.CityModel
 import com.example.orderdeliver.utils.showLog
 import com.yandex.mapkit.geometry.BoundingBox
+import com.yandex.mapkit.geometry.Geometry
 import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.search.Response
 import com.yandex.mapkit.search.SearchFactory
 import com.yandex.mapkit.search.SearchManagerType
+import com.yandex.mapkit.search.SearchOptions
+import com.yandex.mapkit.search.Session
 import com.yandex.mapkit.search.SuggestItem
 import com.yandex.mapkit.search.SuggestOptions
 import com.yandex.mapkit.search.SuggestSession
 import com.yandex.mapkit.search.SuggestSession.SuggestListener
 import com.yandex.mapkit.search.SuggestType
 import com.yandex.runtime.Error
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
@@ -66,6 +67,7 @@ class ManualChooseViewModel(
 
     }
 
+
     fun goBack(cityModel: CityModel? = null){
         navigator.goBack(cityModel)
     }
@@ -75,7 +77,7 @@ class ManualChooseViewModel(
     }
 
     companion object{
-        private val BOUNDING_BOX = BoundingBox(
+        val BOUNDING_BOX = BoundingBox(
             Point(66.066191, 76.468435),
             Point(66.149326, 76.824836)
         )

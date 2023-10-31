@@ -15,7 +15,7 @@ class DefaultAddressRepository @Inject constructor(
 ) : AddressRepository {
 
     private val preferences: SharedPreferences = appContext.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
-    private val cityFlow = MutableStateFlow<String>(getCurrentCity())
+    private val cityFlow = MutableStateFlow(getCurrentCity())
 
     override suspend fun writeAddress(address: String) {
         preferences.edit().putString(PREF_ADDRESS_VALUE, address).apply()

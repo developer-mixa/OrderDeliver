@@ -3,7 +3,6 @@ package com.example.orderdeliver.presentation.delivery
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,20 +12,19 @@ import com.example.navigation.BaseScreen
 import com.example.navigation.BaseViewModel
 import com.example.navigation.Event
 import com.example.navigation.Navigator
-import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.AddressRepository
 import com.example.orderdeliver.domain.Container
 import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
+import com.example.orderdeliver.domain.helpers.YandexMapHelper.convertAddressToPoint
 import com.example.orderdeliver.presentation.delivery.models.CityModel
 import com.example.orderdeliver.utils.share
 import com.example.orderdeliver.utils.showLog
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.yandex.mapkit.geometry.Geometry
 import com.yandex.mapkit.geometry.Point
-import com.yandex.mapkit.map.MapObjectCollection
-import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.search.Address
 import com.yandex.mapkit.search.Response
 import com.yandex.mapkit.search.SearchFactory
@@ -35,27 +33,28 @@ import com.yandex.mapkit.search.SearchManagerType
 import com.yandex.mapkit.search.SearchOptions
 import com.yandex.mapkit.search.Session
 import com.yandex.mapkit.search.ToponymObjectMetadata
-import com.yandex.runtime.image.ImageProvider
+import com.yandex.runtime.Error
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
-import java.lang.Exception
+
 
 class ChooseAddressViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
-    @Assisted screen: BaseScreen,
+    @Assisted val screen: BaseScreen,
     private val addressRepository: AddressRepository
 ) : BaseViewModel() {
 
-    private val _currentLocation: MutableLiveData<android.location.Location> = MutableLiveData()
+    private val _currentLocation: MutableLiveData<Point> = MutableLiveData()
     val currentLocation = _currentLocation.share()
 
     private val _address: MutableLiveData<Container<String>> = MutableLiveData()
     val address = _address.share()
 
     private var fusedLocationClient: FusedLocationProviderClient? = null
-    private var searchManager: SearchManager = SearchFactory.getInstance().createSearchManager(SearchManagerType.ONLINE)
+    private var searchManager: SearchManager =
+        SearchFactory.getInstance().createSearchManager(SearchManagerType.ONLINE)
 
     private val searchListener = object : Session.SearchListener {
         override fun onSearchResponse(response: Response) {
@@ -73,9 +72,10 @@ class ChooseAddressViewModel @AssistedInject constructor(
         }
     }
 
+
     fun goBack() = navigator.goBack()
 
-    fun saveAddress(address: String) = viewModelScope.launch{
+    fun saveAddress(address: String) = viewModelScope.launch {
         addressRepository.writeAddress(address)
     }
 
@@ -85,16 +85,51 @@ class ChooseAddressViewModel @AssistedInject constructor(
 
     override fun onResult(result: Any) {
         super.onResult(result)
-        if (result is Event<*>){
-            val rs = result.getValue()
-            rs ?: return
-            if(rs is CityModel){
-                showLog((rs as CityModel).id)
+        if (result is Event<*>) {
+            val rs = result.getValue() ?: return
+
+            if (rs is CityModel) {
+                searchManager.resolveURI(rs.title, SearchOptions(), searchListener)
+
+                /*                convertAddressToPoint(rs.title){point ->
+                                    showLog("ms: ${point?.latitude} ${point?.longitude}")
+                                    if (point != null){
+                                        _currentLocation.value = point
+                                    }
+                                }*/
+                convertAddressToPoint(searchManager, rs.title, blockSuccess = { point ->
+                    showLog("ms: ${point?.latitude} ${point?.longitude}")
+                    if (point != null) {
+                        _currentLocation.value = point
+                    }
+                }, blockError = {
+                    showLog(it)
+                }
+                )
             }
         }
     }
 
-    fun submitSearch(point: Point){
+
+    fun convertAddressToPoint(address: String, block: (Point?) -> Unit) {
+        searchManager.submit(
+            address,
+            Geometry.fromBoundingBox(ManualChooseViewModel.BOUNDING_BOX),
+            SearchOptions(),
+            object : Session.SearchListener {
+                override fun onSearchResponse(response: Response) {
+                    val obj = response.collection.children[0].obj ?: return
+                    block(obj.geometry[0].point)
+                }
+
+                override fun onSearchError(p0: Error) {
+                }
+
+            })
+    }
+
+
+    fun submitSearch(point: Point) {
         _address.value = PendingContainer()
         searchManager.submit(
             point,
@@ -104,12 +139,13 @@ class ChooseAddressViewModel @AssistedInject constructor(
         )
     }
 
-    fun manuallyChooseAddress(){
-        navigator.launch(ManualChooseFragment.Screen(),addToBackStack = true, aboveAll = true)
+
+    fun manuallyChooseAddress() {
+        navigator.launch(ManualChooseFragment.Screen(), addToBackStack = true, aboveAll = true)
     }
 
     @SuppressLint("MissingPermission")
-     fun getCurrentLocation() = navigator.activityScope {
+    fun getCurrentLocation() = navigator.activityScope {
         _address.value = PendingContainer()
         if (fusedLocationClient == null) fusedLocationClient =
             LocationServices.getFusedLocationProviderClient(it)
@@ -117,7 +153,8 @@ class ChooseAddressViewModel @AssistedInject constructor(
         fusedLocationClient!!.lastLocation
             .addOnSuccessListener { location ->
                 if (location != null) {
-                    _currentLocation.value = location
+                    showLog("whaaaaaaaaaaat2 ${location.latitude} ${location.longitude}")
+                    _currentLocation.value = Point(location.latitude, location.longitude)
                 }
             }
     }
@@ -158,13 +195,17 @@ class ChooseAddressViewModel @AssistedInject constructor(
 
 
     @AssistedFactory
-    interface Factory{
-        fun create(navigator: Navigator, screen: BaseScreen) : ChooseAddressViewModel
+    interface Factory {
+        fun create(navigator: Navigator, screen: BaseScreen): ChooseAddressViewModel
     }
 
-    companion object{
-        fun provideChooseAddressViewModel(factory: ChooseAddressViewModel.Factory, navigator: Navigator, screen: BaseScreen) : ViewModelProvider.Factory{
-            return object : ViewModelProvider.Factory{
+    companion object {
+        fun provideChooseAddressViewModel(
+            factory: ChooseAddressViewModel.Factory,
+            navigator: Navigator,
+            screen: BaseScreen
+        ): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return factory.create(navigator, screen) as T
                 }

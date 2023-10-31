@@ -3,11 +3,14 @@ package com.example.orderdeliver.data
 import com.example.orderdeliver.R
 import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.data.models.FoodType
+import com.example.orderdeliver.data.models.PizzaSize
+import com.example.orderdeliver.data.models.PizzaType
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class FoodSource {
+@Singleton
+class FoodSource @Inject constructor() {
     private val foods = mutableListOf(
         FoodDataModel(
             1,
@@ -18,7 +21,14 @@ class FoodSource {
             R.drawable.test_pizza_one,
             FoodType.FOOD,
             50,
-            maxCount = 5
+            maxCount = 5,
+            options = listOf(
+                PizzaType("Традиционная"),
+                PizzaType("Кавказкая"),
+                PizzaSize("Маленькая", 25, 489),
+                PizzaSize("Средняя", 30, 579),
+                PizzaSize("Большая", 35, 679)
+            )
         ),
         FoodDataModel(
             2,
