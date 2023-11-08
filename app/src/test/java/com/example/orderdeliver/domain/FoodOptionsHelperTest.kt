@@ -1,4 +1,4 @@
-package com.example.orderdeliver.data
+package com.example.orderdeliver.domain
 
 import com.example.orderdeliver.catch
 import com.example.orderdeliver.domain.helpers.FoodOptionsHelper
@@ -6,6 +6,7 @@ import com.example.orderdeliver.data.models.FoodOption
 import com.example.orderdeliver.data.models.PizzaSize
 import com.example.orderdeliver.data.models.PizzaType
 import com.example.orderdeliver.domain.exceptions.InCorrectOptionException
+import com.example.orderdeliver.domain.exceptions.LimitOptionsException
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -24,23 +25,6 @@ class FoodOptionsRepositoryTest {
         val pizzaSizesCount = FoodOptionsHelper.countOptionsByType(options, PizzaSize::class.java)
 
         assertEquals(pizzaSizesCount, 3)
-    }
-
-    @Test
-    fun testOptionsByTypeWithException(){
-        val options = listOf<FoodOption>(
-            PizzaSize("", 0, 0),
-            PizzaSize("", 0, 0),
-            PizzaSize("", 0, 0),
-            PizzaType(""),
-            PizzaType(""),
-        )
-
-        catch<InCorrectOptionException> {
-            FoodOptionsHelper.countOptionsByType(options, String::class.java)
-        }
-
-        //Well..
     }
 
     @Test
@@ -72,7 +56,29 @@ class FoodOptionsRepositoryTest {
 
     @Test
     fun testLimitOptionsException(){
-        println(listOf(10,12,20))
+        val pizzaSize = PizzaSize("", 0, 0)
+        val pizzaSizeList = listOf(pizzaSize, pizzaSize, pizzaSize, pizzaSize, pizzaSize, pizzaSize)
+
+        catch<LimitOptionsException> {
+            FoodOptionsHelper.countOptionsByType(pizzaSizeList, PizzaSize::class.java)
+        }
+    }
+
+    @Test
+    fun testToMap(){
+        val options = listOf<FoodOption>(
+            PizzaSize("", 0, 0),
+            PizzaSize("", 0, 0),
+            PizzaSize("", 0, 0),
+            PizzaSize("", 0, 0),
+            PizzaType(""),
+            PizzaType(""),
+            PizzaType(""),
+        )
+
+        val mappedOptions = FoodOptionsHelper.toMap(options)
+
+        assertEquals(listOf(4, 3), mappedOptions.values.map { it.size })
     }
 
 }
