@@ -17,7 +17,7 @@ interface BasketCountState{
 
     fun plus(foodDataModel: FoodDataModel)
 
-    fun minus(id: Int)
+    fun minus(id: String)
 
 }
 
@@ -63,7 +63,7 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
             textNameSubject.text = foodDataModel.name
 
             minusContainer.setOnClickListener {
-                basketCountState.minus(foodDataModel.id)
+                basketCountState.minus(foodDataModel.fullId())
             }
 
             plusContainer.setOnClickListener {
@@ -117,7 +117,7 @@ private class BasketDiffCallback(
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].foodDataModel.id == newList[newItemPosition].foodDataModel.id
+        return oldList[oldItemPosition].foodDataModel.fullId() == newList[newItemPosition].foodDataModel.fullId()
     }
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {

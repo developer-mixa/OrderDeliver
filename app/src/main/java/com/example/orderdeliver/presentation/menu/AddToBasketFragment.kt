@@ -1,7 +1,5 @@
 package com.example.orderdeliver.presentation.menu
 
-import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +13,7 @@ import com.example.orderdeliver.data.models.FoodDataModel
 import com.example.orderdeliver.data.models.FoodOption
 import com.example.orderdeliver.data.models.PizzaSize
 import com.example.orderdeliver.data.models.PizzaType
+import com.example.orderdeliver.data.models.SetPriceFood
 import com.example.orderdeliver.databinding.AroundLinearLayoutBinding
 import com.example.orderdeliver.databinding.FragmentAddToBasketBinding
 import com.example.orderdeliver.databinding.TextOptionBinding
@@ -22,6 +21,7 @@ import com.example.orderdeliver.presentation.navigation.getBaseScreen
 import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
 import com.example.orderdeliver.utils.CardViewSelector
+import com.example.orderdeliver.utils.showLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -56,9 +56,10 @@ class AddToBasketFragment : Fragment(R.layout.fragment_add_to_basket) {
     }
 
     private fun observeFoodModel() {
-        viewModel.initialFoodModelEvent.observe(viewLifecycleOwner) {
+        viewModel.currentFood.observe(viewLifecycleOwner) {currentFood->
+            showLog(currentFood.price.toString())
             binding.apply {
-                it.getValue()?.run {
+                currentFood.run {
                     foodPhoto.setImageResource(imageResource)
                     nameFood.text = name
                     descFood.text = description
@@ -77,7 +78,7 @@ class AddToBasketFragment : Fragment(R.layout.fragment_add_to_basket) {
         }
     }
 
-    private fun renderOptions(foodOptions: Map<String, List<FoodOption>>){
+    private fun renderOptions(foodOptions: Map<String, List<FoodOption>>) {
         /**First [forEach] for rows, included(second) [forEach] for columns*/
 
         /**the key of the column by which we will take the elements that are in it.*/
@@ -86,27 +87,35 @@ class AddToBasketFragment : Fragment(R.layout.fragment_add_to_basket) {
             /**variable for defining the first selected view.*/
             var isFirst = true
 
-            val aroundLinearBinding = AroundLinearLayoutBinding.inflate(LayoutInflater.from(requireContext()))
+            val aroundLinearBinding =
+                AroundLinearLayoutBinding.inflate(LayoutInflater.from(requireContext()))
 
             /**class that provides it is possible to select elements.*/
             lateinit var cardViewSelector: CardViewSelector
 
             /**we get the options themselves in the column.*/
-            foodOptions[it]?.forEach {foodOption->
-                val textOptionBinding = TextOptionBinding.inflate(LayoutInflater.from(requireContext()))
+            foodOptions[it]?.forEach { foodOption ->
+                val textOptionBinding =
+                    TextOptionBinding.inflate(LayoutInflater.from(requireContext()))
 
-                val text = when(foodOption){
+                val text = when (foodOption) {
                     is PizzaSize -> foodOption.nameSize
                     is PizzaType -> foodOption.type
                 }
 
                 textOptionBinding.textNameOption.text = text
 
-                if(isFirst)cardViewSelector = CardViewSelector(requireContext(), textOptionBinding.root)
+                if (foodOption is SetPriceFood && foodOption.changeDefault){
+                    cardViewSelector.chooseView(textOptionBinding.root)
+                }
+
+                if (isFirst) cardViewSelector =
+                    CardViewSelector(requireContext(), textOptionBinding.root)
                 isFirst = false
 
-                textOptionBinding.root.setOnClickListener {cardView->
+                textOptionBinding.root.setOnClickListener { cardView ->
                     cardViewSelector.chooseView(cardView as CardView)
+                    viewModel.setPrice(foodOption)
                 }
 
                 /**we fill in our row from the view in the column.*/

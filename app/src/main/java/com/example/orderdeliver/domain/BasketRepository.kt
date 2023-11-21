@@ -13,13 +13,15 @@ interface BasketRepository {
 
     suspend fun addBasket(foodDataModel: FoodDataModel)
 
-    suspend fun removeBasket(id: Int)
+    suspend fun removeBasket(id: String)
 
-    suspend fun minusOneBasket(id: Int)
+    suspend fun minusOneBasket(id: String)
 
     fun listenBaskets(): Flow<List<BasketModel>>
 
     fun listenAllCount(): Flow<Int>
+
+    fun setPriceFoodById(foodDataModel: FoodDataModel, newPrice: Int): FoodDataModel
 
     fun priceForAllWithoutDiscount(basketModels: List<BasketModel>): Int
 

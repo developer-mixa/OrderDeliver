@@ -90,13 +90,6 @@ class ChooseAddressViewModel @AssistedInject constructor(
 
             if (rs is CityModel) {
                 searchManager.resolveURI(rs.title, SearchOptions(), searchListener)
-
-                /*                convertAddressToPoint(rs.title){point ->
-                                    showLog("ms: ${point?.latitude} ${point?.longitude}")
-                                    if (point != null){
-                                        _currentLocation.value = point
-                                    }
-                                }*/
                 convertAddressToPoint(searchManager, rs.title, blockSuccess = { point ->
                     showLog("ms: ${point?.latitude} ${point?.longitude}")
                     if (point != null) {

@@ -20,14 +20,13 @@ class FoodSource @Inject constructor() {
             579,
             R.drawable.test_pizza_one,
             FoodType.FOOD,
-            50,
             maxCount = 5,
             options = listOf(
                 PizzaType("Традиционная"),
                 PizzaType("Кавказкая"),
-                PizzaSize("Маленькая", 25, 489),
-                PizzaSize("Средняя", 30, 579),
-                PizzaSize("Большая", 35, 679)
+                PizzaSize("Маленькая", 25, 489, false),
+                PizzaSize("Средняя", 30, 579, true),
+                PizzaSize("Большая", 35, 679, false)
             )
         ),
         FoodDataModel(

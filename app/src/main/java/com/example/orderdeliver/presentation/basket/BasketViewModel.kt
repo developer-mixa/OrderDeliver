@@ -29,17 +29,13 @@ class BasketViewModel @AssistedInject constructor(
     @Assisted val screen: BaseScreen,
     private val defaultBasketRepository: BasketRepository,
     private val tapToMenuUseCase: TapToMenuUseCase,
-    private val def: BasketRepository
 ): ViewModel() {
 
-    private val _baskets: MutableLiveData<List<BasketModel>?> = MutableLiveData<List<BasketModel>?>()
+    private val _baskets: MutableLiveData<List<BasketModel>?> = MutableLiveData()
     val baskets = _baskets.share()
 
     private val _payment: MutableLiveData<Container<PaymentModel>> = MutableLiveData()
     val payment = _payment.share()
-
-    private val _wayPayment: MutableLiveData<String> = MutableLiveData()
-    val wayPayment = _wayPayment.share()
 
     init {
         viewModelScope.launch {
@@ -76,7 +72,7 @@ class BasketViewModel @AssistedInject constructor(
 
     }
 
-    fun removeCountItem(id: Int)= viewModelScope.launch{
+    fun removeCountItem(id: String)= viewModelScope.launch{
         defaultBasketRepository.minusOneBasket(id)
     }
 

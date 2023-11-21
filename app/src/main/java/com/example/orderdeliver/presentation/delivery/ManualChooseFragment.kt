@@ -62,7 +62,6 @@ class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose), City
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.suggests.collect { result ->
 
-
                 when (result) {
                     is SuccessContainer -> {
                         val cities = result.data

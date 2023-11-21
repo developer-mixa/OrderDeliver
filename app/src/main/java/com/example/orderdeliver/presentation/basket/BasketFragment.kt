@@ -58,7 +58,7 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
             viewModel.addCountItem(foodDataModel)
         }
 
-        override fun minus(id: Int) {
+        override fun minus(id: String) {
             viewModel.removeCountItem(id)
         }
 
