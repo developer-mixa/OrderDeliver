@@ -6,12 +6,13 @@ import com.example.orderdeliver.data.models.FoodType
 import com.example.orderdeliver.data.models.PizzaSize
 import com.example.orderdeliver.data.models.PizzaType
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class FoodSource @Inject constructor() {
-    private val foods = mutableListOf(
+    private val differentFoods = mutableListOf(
         FoodDataModel(
             1,
             "Пепперони",
@@ -97,6 +98,16 @@ class FoodSource @Inject constructor() {
 
 
     )
+    private val foods: MutableList<FoodDataModel> = mutableListOf()
+
+    init {
+        for (i in 1 until 81){
+            val randomFood = differentFoods.random()
+            val food = randomFood.copy(id = i, name = "${randomFood.name}: $i")
+
+            foods.add(food)
+        }
+    }
 
     private var lastId = 1
 
@@ -122,7 +133,8 @@ class FoodSource @Inject constructor() {
         return typeFoods
     }
 
-    fun getFoods(foodType: FoodType): List<FoodDataModel> {
+    suspend fun getFoods(foodType: FoodType): List<FoodDataModel> {
+        delay(1000)
         if (foodType == FoodType.ALL) return foods
         return foods.filter { it.foodType == foodType }
     }

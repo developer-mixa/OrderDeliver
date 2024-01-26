@@ -110,7 +110,7 @@ class AddToBasketFragment : Fragment(R.layout.fragment_add_to_basket) {
                 }
 
                 if (isFirst) cardViewSelector =
-                    CardViewSelector(requireContext(), textOptionBinding.root)
+                    CardViewSelector(requireContext(), R.color.white, R.color.background_basket_color, textOptionBinding.root)
                 isFirst = false
 
                 textOptionBinding.root.setOnClickListener { cardView ->

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,7 @@ interface FoodActionState{
     fun select(foodDataModel: FoodDataModel)
     fun addBasket(foodDataModel: FoodDataModel)
 }
-class MenuAdapter(private val foodActionState: FoodActionState): ListAdapter<FoodDataModel,MenuAdapter.MenuHolder>(MenuItemCallback()) {
+class MenuAdapter(private val foodActionState: FoodActionState): PagingDataAdapter<FoodDataModel,MenuAdapter.MenuHolder>(MenuItemCallback()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuHolder {
@@ -25,7 +26,10 @@ class MenuAdapter(private val foodActionState: FoodActionState): ListAdapter<Foo
     }
 
 
-    override fun onBindViewHolder(holder: MenuHolder, position: Int) = holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: MenuHolder, position: Int) {
+        val item = getItem(position) ?: return
+        holder.bind(item)
+    }
 
     class MenuHolder(view: View, private val foodActionState: FoodActionState): RecyclerView.ViewHolder(view){
 

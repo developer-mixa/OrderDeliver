@@ -55,6 +55,7 @@ dependencies {
     implementation Libs.Android.ActivityKtx
     implementation Libs.Android.LifecycleRuntimeKtx
     implementation Libs.Android.LifecycleViewModelKtx
+    implementation Libs.Android.Paging
 
     implementation Libs.Google.Material
     implementation Libs.Google.Hilt
