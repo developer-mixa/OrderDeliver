@@ -1,23 +1,18 @@
 package com.example.orderdeliver.presentation.basket
 
 import android.animation.LayoutTransition
-import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.transition.TransitionManager
 import android.view.View
-import android.view.View.MeasureSpec
-import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.navigation.BaseScreen
 import com.example.orderdeliver.R
-import com.example.orderdeliver.data.models.FoodDataModel
-import com.example.orderdeliver.data.models.PaymentModel
+import com.example.orderdeliver.domain.models.FoodDataModel
+import com.example.orderdeliver.domain.models.PaymentModel
 import com.example.orderdeliver.databinding.BottomSheetBasketBinding
 import com.example.orderdeliver.databinding.FragmentBasketBinding
 import com.example.orderdeliver.domain.ErrorContainer
@@ -26,11 +21,8 @@ import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.presentation.navigation.getBaseScreen
 import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
-import com.example.orderdeliver.utils.getHeightIfGone
 import com.example.orderdeliver.utils.getVerticalLayoutManager
 import com.example.orderdeliver.utils.markButtonDisable
-import com.example.orderdeliver.utils.showLog
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -100,30 +92,34 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
         dialogBinding.wayPaymentContainer.isVisible = false
         dialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
 
+
+
         dialogBinding.apply {
+
+            fun hide(){
+                binding.root.layoutTransition =
+                    LayoutTransition().apply { setAnimateParentHierarchy(false) }
+
+                paymentContainer.isVisible = false
+                wayPaymentContainer.isVisible = true
+            }
+
             textAdress.text = paymentModel.address
             textCountSubjects.text = "${paymentModel.allCountSubjects} товаров"
             textPriceWithoutDiscount.text = "${paymentModel.priceWithoutDiscount} $"
             textDiscount.text = "-${paymentModel.discountSum} $"
             textPriceOrder.text = "${paymentModel.donePrice} $"
             paymentLayout.setOnClickListener {
+                hide()
+            }
 
-                binding.root.layoutTransition =
-                    LayoutTransition().apply { setAnimateParentHierarchy(false) }
-
-                paymentContainer.isVisible = false
-                wayPaymentContainer.isVisible = true
-
-
+            buttonMakeOrder.setOnClickListener {
+                viewModel.pay()
+                dialog.cancel()
             }
 
             imageBack.setOnClickListener {
-
-                binding.root.layoutTransition =
-                    LayoutTransition().apply { setAnimateParentHierarchy(false) }
-
-                paymentContainer.isVisible = true
-                wayPaymentContainer.isVisible = false
+                hide()
             }
 
         }

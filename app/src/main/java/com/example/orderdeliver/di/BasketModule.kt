@@ -1,7 +1,7 @@
 package com.example.orderdeliver.di
 
-import com.example.orderdeliver.data.DefaultBasketRepository
-import com.example.orderdeliver.domain.BasketRepository
+import com.example.orderdeliver.data.repositories.DefaultBasketRepository
+import com.example.orderdeliver.domain.repositories.BasketRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

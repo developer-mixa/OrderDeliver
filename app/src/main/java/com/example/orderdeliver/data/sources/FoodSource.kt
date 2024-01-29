@@ -1,11 +1,12 @@
-package com.example.orderdeliver.data
+package com.example.orderdeliver.data.sources
 
 import com.example.orderdeliver.R
-import com.example.orderdeliver.data.models.FoodDataModel
-import com.example.orderdeliver.data.models.FoodType
-import com.example.orderdeliver.data.models.PizzaSize
-import com.example.orderdeliver.data.models.PizzaType
+import com.example.orderdeliver.domain.models.FoodDataModel
+import com.example.orderdeliver.domain.models.FoodType
+import com.example.orderdeliver.domain.models.PizzaSize
+import com.example.orderdeliver.domain.models.PizzaType
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
+import com.example.orderdeliver.utils.showLog
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -112,13 +113,13 @@ class FoodSource @Inject constructor() {
     private var lastId = 1
 
     private val typeFoods = mutableListOf<TypeFoodModel>(
-        TypeFoodModel(1,FoodType.ALL, "Всё",true),
-        TypeFoodModel(2,FoodType.FOOD, "Еда",false),
-        TypeFoodModel(3,FoodType.DRINK, "Коктейли",false),
-        TypeFoodModel(4,FoodType.COMBO, "Комбо",false),
-        TypeFoodModel(5,FoodType.SAUCE, "Соус",false),
-        TypeFoodModel(6,FoodType.SAUCE, "Соус",false),
-        TypeFoodModel(7,FoodType.SAUCE, "Соус",false),
+        TypeFoodModel(1, FoodType.ALL, "Всё", true),
+        TypeFoodModel(2, FoodType.FOOD, "Еда", false),
+        TypeFoodModel(3, FoodType.DRINK, "Коктейли", false),
+        TypeFoodModel(4, FoodType.COMBO, "Комбо", false),
+        TypeFoodModel(5, FoodType.SAUCE, "Соус", false),
+        TypeFoodModel(6, FoodType.SAUCE, "Соус", false),
+        TypeFoodModel(7, FoodType.SAUCE, "Соус", false),
     )
 
     fun getTypeFoods(): List<TypeFoodModel> = typeFoods
@@ -139,5 +140,10 @@ class FoodSource @Inject constructor() {
         return foods.filter { it.foodType == foodType }
     }
 
-    fun getTypes(): List<TypeFoodModel> = typeFoods
+    fun reduceFood(id: Int, reducingCount: Int){
+        val needIndex = foods.indexOfFirst { it.id == id }
+        foods[needIndex] = foods[needIndex].copy(maxCount = foods[needIndex].maxCount - reducingCount)
+        showLog("asda da da da  da ad ${needIndex}", "a osdpa msd piaks dpiak sd")
+    }
+
 }

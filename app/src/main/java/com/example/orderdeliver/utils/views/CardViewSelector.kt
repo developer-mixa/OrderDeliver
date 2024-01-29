@@ -16,7 +16,7 @@ class CardViewSelector(
 
     private val _turnedOffColor = context.getColor(turnedOffColor)
     init {
-        _selectView.setCardBackgroundColor(_chooseColor)
+        firstSelectView.setCardBackgroundColor(_chooseColor)
     }
 
     override fun <T : View> chooseView(view: T) {

@@ -1,8 +1,7 @@
-package com.example.orderdeliver.data.models
+package com.example.orderdeliver.domain.models
 
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
-import androidx.versionedparcelable.NonParcelField
 import com.example.orderdeliver.domain.exceptions.InCorrectOptionException
 import kotlinx.parcelize.Parcelize
 
@@ -19,7 +18,7 @@ data class FoodDataModel(
     val foodType: FoodType,
     val discount: Int = 0,
     val priceWithDiscount: Int = 0,
-    val maxCount: Int = 10000,
+    val maxCount: Int = 10,
     val options: List<FoodOption>? = null
 ): Parcelable{
 

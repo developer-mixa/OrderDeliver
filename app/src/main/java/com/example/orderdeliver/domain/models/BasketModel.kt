@@ -1,4 +1,4 @@
-package com.example.orderdeliver.data.models
+package com.example.orderdeliver.domain.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

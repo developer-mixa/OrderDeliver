@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orderdeliver.R
-import com.example.orderdeliver.data.models.BasketModel
-import com.example.orderdeliver.data.models.FoodDataModel
+import com.example.orderdeliver.domain.models.BasketModel
+import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.databinding.BasketItemBinding
 import com.example.orderdeliver.utils.setList
 
@@ -99,7 +99,7 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
 
 }
 
-fun generateBasketPayload(oldItem: BasketModel, newItem: BasketModel): Bundle?{
+private fun generateBasketPayload(oldItem: BasketModel, newItem: BasketModel): Bundle?{
     val bundle = Bundle()
     if (oldItem.count != newItem.count){
         bundle.putParcelable(BasketAdapter.BASKET_KEY, newItem)

@@ -6,11 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.navigation.BaseScreen
 import com.example.navigation.Navigator
-import com.example.orderdeliver.R
-import com.example.orderdeliver.data.DefaultBasketRepository
-import com.example.orderdeliver.data.models.FoodDataModel
-import com.example.orderdeliver.data.models.FoodType
-import com.example.orderdeliver.domain.BasketRepository
+import com.example.orderdeliver.domain.repositories.BasketRepository
 import com.example.orderdeliver.domain.usecases.TapToMenuUseCase
 import com.example.orderdeliver.presentation.basket.BasketFragment
 import com.example.orderdeliver.presentation.menu.MenuFragment
@@ -20,7 +16,6 @@ import com.example.orderdeliver.utils.showLog
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dagger.assisted.AssistedFactory
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel @AssistedInject constructor(

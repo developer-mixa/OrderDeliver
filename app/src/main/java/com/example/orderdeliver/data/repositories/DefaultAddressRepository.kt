@@ -1,8 +1,8 @@
-package com.example.orderdeliver.data
+package com.example.orderdeliver.data.repositories
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.orderdeliver.domain.AddressRepository
+import com.example.orderdeliver.domain.repositories.AddressRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.navigation.BaseScreen
 import com.example.orderdeliver.R
-import com.example.orderdeliver.data.models.FoodDataModel
-import com.example.orderdeliver.data.models.FoodOption
-import com.example.orderdeliver.data.models.PizzaSize
-import com.example.orderdeliver.data.models.PizzaType
-import com.example.orderdeliver.data.models.SetPriceFood
+import com.example.orderdeliver.domain.models.FoodDataModel
+import com.example.orderdeliver.domain.models.FoodOption
+import com.example.orderdeliver.domain.models.PizzaSize
+import com.example.orderdeliver.domain.models.PizzaType
+import com.example.orderdeliver.domain.models.SetPriceFood
 import com.example.orderdeliver.databinding.AroundLinearLayoutBinding
 import com.example.orderdeliver.databinding.FragmentAddToBasketBinding
 import com.example.orderdeliver.databinding.TextOptionBinding

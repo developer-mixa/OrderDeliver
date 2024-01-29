@@ -9,8 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.example.navigation.BaseScreen
 import com.example.orderdeliver.R
-import com.example.orderdeliver.data.models.FoodDataModel
-import com.example.orderdeliver.data.models.FoodType
+import com.example.orderdeliver.domain.models.FoodDataModel
+import com.example.orderdeliver.domain.models.FoodType
 import com.example.orderdeliver.databinding.FragmentMenuBinding
 import com.example.orderdeliver.utils.getHorizontalLayoutManager
 import com.example.orderdeliver.utils.getVerticalLayoutManager

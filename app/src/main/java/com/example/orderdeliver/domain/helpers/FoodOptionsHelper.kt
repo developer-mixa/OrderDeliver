@@ -1,11 +1,9 @@
 package com.example.orderdeliver.domain.helpers
 
-import com.example.orderdeliver.data.models.FoodOption
-import com.example.orderdeliver.data.models.SetPriceFood
+import com.example.orderdeliver.domain.models.FoodOption
+import com.example.orderdeliver.domain.models.SetPriceFood
 import com.example.orderdeliver.domain.exceptions.InCorrectOptionException
 import com.example.orderdeliver.domain.exceptions.LimitOptionsException
-import com.example.orderdeliver.utils.showLog
-import kotlin.reflect.cast
 
 object FoodOptionsHelper {
 

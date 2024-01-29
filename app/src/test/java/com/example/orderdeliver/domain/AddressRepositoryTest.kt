@@ -3,14 +3,12 @@ package com.example.orderdeliver.domain
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.orderdeliver.catch
-import com.example.orderdeliver.data.DefaultAddressRepository
-import com.example.orderdeliver.data.InvalidAddressException
-import com.example.orderdeliver.domain.exceptions.ZeroItemException
+import com.example.orderdeliver.data.repositories.DefaultAddressRepository
+import com.example.orderdeliver.data.repositories.InvalidAddressException
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest

@@ -1,6 +1,6 @@
 package com.example.orderdeliver.domain.usecases
 
-import com.example.orderdeliver.domain.AddressRepository
+import com.example.orderdeliver.domain.repositories.AddressRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -1,18 +1,14 @@
 package com.example.orderdeliver.domain
 
 import com.example.orderdeliver.catch
-import com.example.orderdeliver.data.DefaultBasketRepository
-import com.example.orderdeliver.data.models.BasketModel
-import com.example.orderdeliver.data.models.FoodDataModel
-import com.example.orderdeliver.data.models.FoodType
+import com.example.orderdeliver.data.repositories.DefaultBasketRepository
+import com.example.orderdeliver.domain.models.BasketModel
+import com.example.orderdeliver.domain.models.FoodDataModel
+import com.example.orderdeliver.domain.models.FoodType
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.exceptions.ZeroItemException
-import com.example.orderdeliver.utils.showLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test

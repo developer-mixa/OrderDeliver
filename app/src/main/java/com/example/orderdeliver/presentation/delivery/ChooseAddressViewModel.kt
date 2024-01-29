@@ -12,7 +12,7 @@ import com.example.navigation.BaseScreen
 import com.example.navigation.BaseViewModel
 import com.example.navigation.Event
 import com.example.navigation.Navigator
-import com.example.orderdeliver.domain.AddressRepository
+import com.example.orderdeliver.domain.repositories.AddressRepository
 import com.example.orderdeliver.domain.Container
 import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer

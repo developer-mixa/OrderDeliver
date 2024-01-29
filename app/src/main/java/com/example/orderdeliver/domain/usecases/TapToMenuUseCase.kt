@@ -20,7 +20,6 @@ class TapToMenuUseCase @Inject constructor() {
     fun listen(): Flow<Event<Boolean>> = _isTapMainFlow
 
     suspend fun toMain() {
-        showLog("toMain")
         _isTapMainFlow.emit(Event(true))
     }
 

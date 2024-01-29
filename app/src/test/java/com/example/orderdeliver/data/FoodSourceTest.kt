@@ -1,7 +1,6 @@
 package com.example.orderdeliver.data
 
-import com.example.orderdeliver.data.models.FoodType
-import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
+import com.example.orderdeliver.data.sources.FoodSource
 import org.junit.Assert
 import org.junit.Test
 

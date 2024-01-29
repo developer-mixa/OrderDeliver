@@ -6,10 +6,9 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orderdeliver.R
-import com.example.orderdeliver.data.models.FoodDataModel
+import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.databinding.FoodItemBinding
 
 interface FoodActionState{

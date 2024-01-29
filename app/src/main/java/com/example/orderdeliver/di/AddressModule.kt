@@ -1,7 +1,7 @@
 package com.example.orderdeliver.di
 
-import com.example.orderdeliver.data.DefaultAddressRepository
-import com.example.orderdeliver.domain.AddressRepository
+import com.example.orderdeliver.data.repositories.DefaultAddressRepository
+import com.example.orderdeliver.domain.repositories.AddressRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

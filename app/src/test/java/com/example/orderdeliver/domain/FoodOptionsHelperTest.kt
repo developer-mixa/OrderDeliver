@@ -2,10 +2,9 @@ package com.example.orderdeliver.domain
 
 import com.example.orderdeliver.catch
 import com.example.orderdeliver.domain.helpers.FoodOptionsHelper
-import com.example.orderdeliver.data.models.FoodOption
-import com.example.orderdeliver.data.models.PizzaSize
-import com.example.orderdeliver.data.models.PizzaType
-import com.example.orderdeliver.domain.exceptions.InCorrectOptionException
+import com.example.orderdeliver.domain.models.FoodOption
+import com.example.orderdeliver.domain.models.PizzaSize
+import com.example.orderdeliver.domain.models.PizzaType
 import com.example.orderdeliver.domain.exceptions.LimitOptionsException
 import org.junit.Assert.assertEquals
 import org.junit.Test

@@ -1,4 +1,4 @@
-package com.example.orderdeliver.domain
+package com.example.orderdeliver.domain.repositories
 
 import kotlinx.coroutines.flow.Flow
 

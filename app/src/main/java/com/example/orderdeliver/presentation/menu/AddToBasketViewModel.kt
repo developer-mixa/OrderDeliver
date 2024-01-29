@@ -4,18 +4,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.navigation.Event
 import com.example.navigation.Navigator
 import com.example.orderdeliver.R
-import com.example.orderdeliver.data.models.FoodDataModel
-import com.example.orderdeliver.data.models.FoodOption
+import com.example.orderdeliver.domain.models.FoodDataModel
+import com.example.orderdeliver.domain.models.FoodOption
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.exceptions.WrongPriceException
 import com.example.orderdeliver.domain.helpers.FoodOptionsHelper
 import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
 import com.example.orderdeliver.domain.usecases.SetPriceWithOptionUseCase
 import com.example.orderdeliver.utils.share
-import com.example.orderdeliver.utils.showLog
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -58,7 +56,7 @@ class AddToBasketViewModel @AssistedInject constructor(
         navigator.goBack()
     }
 
-    fun setPrice(foodOption: FoodOption){
+    fun setPrice(foodOption: FoodOption) = viewModelScope.launch{
         try {
             val foodWithNewPrice = setPriceWithOptionUseCase(_currentFood.value!!, foodOption)
             if (foodWithNewPrice != null){

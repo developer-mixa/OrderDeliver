@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orderdeliver.R
-import com.example.orderdeliver.data.models.FoodType
+import com.example.orderdeliver.domain.models.FoodType
 import com.example.orderdeliver.databinding.TypeSubjectItemBinding
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import com.example.orderdeliver.utils.setList
