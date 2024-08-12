@@ -11,9 +11,9 @@ interface FoodRepository {
 
     fun getAllFoodTypes(): List<TypeFoodModel>
 
-    fun setActivatedTypeFoodById(id: Int): MutableList<TypeFoodModel>?
+    fun setActivatedTypeFoodById(id: String): MutableList<TypeFoodModel>?
 
-    suspend fun findFoodById(id: Int) : FoodDataModel
+    suspend fun findFoodById(id: String) : FoodDataModel
 
-    suspend fun reduceFood(id: Int, reduceCount: Int)
+    suspend fun reduceFood(id: String, reduceCount: Int)
 }

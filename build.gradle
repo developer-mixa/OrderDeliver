@@ -9,6 +9,7 @@ buildscript {
         hiltVersion = "2.44"
         navVersion = "2.4.0"
         okhttp_version = "4.9.3"
+        retrofitVersion = "2.9.0"
 
         Libs = [
                 Android: [
@@ -49,7 +50,8 @@ buildscript {
                 Http: [
                         OkHttp: "com.squareup.okhttp3:okhttp:$okhttp_version",
                         LoggingInterceptor: "com.squareup.okhttp3:logging-interceptor:$okhttp_version",
-                        GoogleGson: "com.google.code.gson:gson:2.9.0"
+                        Moshi: "com.squareup.retrofit2:converter-moshi:$retrofitVersion",
+                        Retrofit: "com.squareup.retrofit2:retrofit:$retrofitVersion"
                 ]
         ]
 

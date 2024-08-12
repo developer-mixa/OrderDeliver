@@ -73,7 +73,7 @@ class MenuViewModel @AssistedInject constructor(
 
     }
 
-    fun setStateTypesById(id: Int) {
+    fun setStateTypesById(id: String) {
         val newTypeFoods = foodRepository.setActivatedTypeFoodById(id) ?: return
         _typeFoods.value = newTypeFoods
     }

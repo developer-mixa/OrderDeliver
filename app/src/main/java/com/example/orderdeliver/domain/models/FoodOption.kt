@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 sealed class FoodOption: Parcelable
 
 interface SetPriceFood {
-    val newPrice: Int
+    val newPrice: Float
     val changeDefault: Boolean
 }
 
@@ -19,7 +19,7 @@ data class PizzaType(
 data class PizzaSize(
     val nameSize: String,
     val sizeSm: Int,
-    override val newPrice: Int,
+    override val newPrice: Float,
     override val changeDefault: Boolean
 ): FoodOption(), SetPriceFood
 

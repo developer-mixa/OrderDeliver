@@ -33,7 +33,6 @@ class MainViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            showLog("init")
             tapToMenuUseCase.listen().collect {
                 _isTapToMain.value = it.getValue()
             }
@@ -55,8 +54,6 @@ class MainViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(navigator: Navigator, screen: BaseScreen): MainViewModel
-
-
     }
 
     companion object {

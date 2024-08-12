@@ -15,7 +15,7 @@ import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import com.example.orderdeliver.utils.setList
 
 interface TypeFoodState {
-    fun tap(id: Int, foodType: FoodType)
+    fun tap(id: String, foodType: FoodType)
 }
 
 class TypeFoodAdapter(private val typeFoodState: TypeFoodState) :

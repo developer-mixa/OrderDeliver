@@ -27,6 +27,7 @@ class FoodPagingSource(
                 nextKey = if (foods.size == params.loadSize) pageIndex + (params.loadSize / pageSize) else null
             )
         } catch (e: Exception){
+            println(e)
             LoadResult.Error(throwable = e)
         }
 

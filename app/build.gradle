@@ -63,6 +63,11 @@ dependencies {
 
     implementation Libs.JetBrains.CoroutinesCore
 
+    implementation Libs.Http.OkHttp
+    implementation Libs.Http.LoggingInterceptor
+    implementation Libs.Http.Moshi
+    implementation Libs.Http.Retrofit
+
     implementation Libs.GitHub.CircularImageView
 
     implementation Libs.Yandex.MapsMobile

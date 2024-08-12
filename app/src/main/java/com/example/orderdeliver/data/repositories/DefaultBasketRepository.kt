@@ -58,7 +58,7 @@ class DefaultBasketRepository @Inject constructor(
 
     override fun listenBaskets(): Flow<List<BasketModel>> = listBasketsFlow
     override fun listenAllCount(): Flow<Int> = allCountBaskets
-    override fun setPriceFoodById(foodDataModel: FoodDataModel, newPrice: Int) : FoodDataModel {
+    override fun setPriceFoodById(foodDataModel: FoodDataModel, newPrice: Float) : FoodDataModel {
         if (newPrice < 0) throw WrongPriceException(newPrice)
 
         return foodDataModel.copy(price = newPrice)

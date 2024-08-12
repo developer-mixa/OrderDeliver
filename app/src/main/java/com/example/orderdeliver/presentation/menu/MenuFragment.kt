@@ -51,7 +51,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
 
 
     private val typeFoodState = object : TypeFoodState {
-        override fun tap(id: Int, foodType: FoodType) {
+        override fun tap(id: String, foodType: FoodType) {
             viewModel.setStateTypesById(id)
             viewModel.filterFoods(foodType)
         }

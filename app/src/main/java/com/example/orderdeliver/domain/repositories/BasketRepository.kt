@@ -16,7 +16,7 @@ interface BasketRepository {
 
     fun listenAllCount(): Flow<Int>
 
-    fun setPriceFoodById(foodDataModel: FoodDataModel, newPrice: Int): FoodDataModel
+    fun setPriceFoodById(foodDataModel: FoodDataModel, newPrice: Float): FoodDataModel
 
     suspend fun clear()
 

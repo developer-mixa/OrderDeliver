@@ -39,15 +39,15 @@ class DefaultFoodRepository @Inject constructor(
         return foodSource.getTypeFoods()
     }
 
-    override fun setActivatedTypeFoodById(id: Int): MutableList<TypeFoodModel>? {
+    override fun setActivatedTypeFoodById(id: String): MutableList<TypeFoodModel>? {
         return foodSource.setActivatedTypeFoodById(id)
     }
 
-    override suspend fun findFoodById(id: Int): FoodDataModel {
+    override suspend fun findFoodById(id: String): FoodDataModel {
         return foodSource.getFoods(FoodType.ALL).find { it.id == id } ?: throw NotFoundException()
     }
 
-    override suspend fun reduceFood(id: Int, reduceCount: Int) {
+    override suspend fun reduceFood(id: String, reduceCount: Int) {
         foodSource.reduceFood(id, reduceCount)
     }
 

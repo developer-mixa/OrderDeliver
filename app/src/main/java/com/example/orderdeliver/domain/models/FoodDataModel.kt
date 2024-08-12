@@ -9,11 +9,11 @@ enum class FoodType { DRINK, FOOD, COMBO, SAUCE, ALL }
 
 @Parcelize
 data class FoodDataModel(
-    val id: Int,
+    val id: String,
     val name: String,
     val description: String,
     val weight: Float,
-    val price: Int,
+    val price: Float,
     @DrawableRes val imageResource: Int,
     val foodType: FoodType,
     val discount: Int = 0,
