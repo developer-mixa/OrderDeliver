@@ -8,7 +8,6 @@ import com.example.orderdeliver.data.sources.FoodPageLoader
 import com.example.orderdeliver.data.sources.FoodPagingSource
 import com.example.orderdeliver.data.sources.FoodSource
 import com.example.orderdeliver.domain.models.FoodDataModel
-import com.example.orderdeliver.domain.models.FoodType
 import com.example.orderdeliver.domain.repositories.FoodRepository
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import kotlinx.coroutines.flow.Flow
@@ -21,9 +20,9 @@ class DefaultFoodRepository @Inject constructor(
     private val foodSource: FoodSource
 ): FoodRepository {
 
-    override fun getPagedFoods(foodType: FoodType): Flow<PagingData<FoodDataModel>> {
+    override fun getPagedFoods(foodTypeId: String): Flow<PagingData<FoodDataModel>> {
         val loader : FoodPageLoader =  { pageIndex, pageSize ->
-            getFoods(pageIndex, pageSize, foodType)
+            getFoods(pageIndex, pageSize, foodTypeId)
         }
 
         return Pager(
@@ -35,16 +34,16 @@ class DefaultFoodRepository @Inject constructor(
         ).flow
     }
 
-    override fun getAllFoodTypes(): List<TypeFoodModel> {
+    override suspend fun getAllFoodTypes(): List<TypeFoodModel> {
         return foodSource.getTypeFoods()
     }
 
-    override fun setActivatedTypeFoodById(id: String): MutableList<TypeFoodModel>? {
+    override fun setActivatedTypeFoodById(id: String): List<TypeFoodModel>? {
         return foodSource.setActivatedTypeFoodById(id)
     }
 
     override suspend fun findFoodById(id: String): FoodDataModel {
-        return foodSource.getFoods(FoodType.ALL).find { it.id == id } ?: throw NotFoundException()
+        return foodSource.getFoods(id).find { it.id == id } ?: throw NotFoundException()
     }
 
     override suspend fun reduceFood(id: String, reduceCount: Int) {
@@ -54,9 +53,10 @@ class DefaultFoodRepository @Inject constructor(
     private suspend fun getFoods(
         pageIndex: Int,
         pageSize: Int,
-        foodType: FoodType
+        foodTypeId: String
     ): List<FoodDataModel> {
-        val foods = foodSource.getFoods(foodType)
+        println("foodTypeId: $foodTypeId")
+        val foods = foodSource.getFoods(foodTypeId)
 
         val offset = pageIndex * pageSize
 

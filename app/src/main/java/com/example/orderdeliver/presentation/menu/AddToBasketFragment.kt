@@ -64,7 +64,7 @@ class AddToBasketFragment : Fragment(R.layout.fragment_add_to_basket) {
                     nameFood.text = name
                     descFood.text = description
 
-                    if (discount == 0)
+                    if (priceWithDiscount == null)
                         buttonAddToBasket.text = "В корзину за $price $"
                     else buttonAddToBasket.text = "В корзину за $priceWithDiscount $"
                 }

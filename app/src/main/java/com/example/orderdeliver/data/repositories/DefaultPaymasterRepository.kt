@@ -56,23 +56,23 @@ class DefaultPaymasterRepository @Inject constructor(
         return SuccessContainer("Платёж прошёл успешно!")
     }
 
-    private fun priceForAllWithoutDiscount(basketModels: List<BasketModel>): Int {
-        var result = 0
+    private fun priceForAllWithoutDiscount(basketModels: List<BasketModel>): Float {
+        var result = 0f
         basketModels.forEach {
             if (it.count == 0) throw ZeroItemException()
-            val subjectWithoutDiscount = it.copy(foodDataModel = it.foodDataModel.copy(discount = 0))
+            val subjectWithoutDiscount = it.copy(foodDataModel = it.foodDataModel.copy(priceWithDiscount = null))
             result += getPriceForSubjectUseCase(subjectWithoutDiscount)
         }
         return result
     }
-    private fun getDiscountCount(basketModels: List<BasketModel>): Int {
-        var resultWithDiscount = 0
-        var resultWithoutDiscount = 0
+    private fun getDiscountCount(basketModels: List<BasketModel>): Float {
+        var resultWithDiscount = 0f
+        var resultWithoutDiscount = 0f
 
         basketModels.forEach {
             if (it.count == 0) throw ZeroItemException()
             resultWithDiscount += getPriceForSubjectUseCase(it)
-            val subjectWithoutDiscount = it.copy(foodDataModel = it.foodDataModel.copy(discount = 0))
+            val subjectWithoutDiscount = it.copy(foodDataModel = it.foodDataModel.copy(priceWithDiscount = null))
             resultWithoutDiscount += getPriceForSubjectUseCase(subjectWithoutDiscount)
         }
         return resultWithoutDiscount - resultWithDiscount

@@ -4,7 +4,7 @@ interface OrderModel{
     val id: String
     val address: String
     val card: String
-    val donePrice: Int
+    val donePrice: Float
     val baskets: List<BasketModel>
     val date: String
 }

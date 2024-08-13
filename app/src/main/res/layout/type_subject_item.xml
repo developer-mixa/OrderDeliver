@@ -9,7 +9,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/itemCard"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_margin="4dp"
         app:cardBackgroundColor="@color/type_subject_color_default"
         app:cardCornerRadius="17dp"

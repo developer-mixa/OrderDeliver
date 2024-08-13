@@ -13,7 +13,6 @@ import com.example.navigation.Navigator
 import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.models.BasketModel
 import com.example.orderdeliver.domain.models.FoodDataModel
-import com.example.orderdeliver.domain.models.FoodType
 import com.example.orderdeliver.domain.repositories.BasketRepository
 import com.example.orderdeliver.domain.repositories.FoodRepository
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
@@ -53,19 +52,19 @@ class MenuViewModel @AssistedInject constructor(
     val currentCity = _currentCity.share()
 
 
-    private val _currentFoodType: MutableLiveData<FoodType> by lazy { MutableLiveData(FoodType.ALL) }
+    private val _currentFoodTypeId: MutableLiveData<String> by lazy { MutableLiveData("ALL") }
 
     init {
-        foods = _currentFoodType.asFlow()
+        foods = _currentFoodTypeId.asFlow()
             .debounce(50)
             .flatMapLatest {foodType ->
                 foodRepository.getPagedFoods(foodType)
             }
             .cachedIn(viewModelScope)
 
-        _typeFoods.value = foodRepository.getAllFoodTypes()
-
         viewModelScope.launch {
+            _typeFoods.value = foodRepository.getAllFoodTypes()
+
             getCurrentCityUseCase.listen().collect {
                 _currentCity.value = it
             }
@@ -78,8 +77,8 @@ class MenuViewModel @AssistedInject constructor(
         _typeFoods.value = newTypeFoods
     }
 
-    fun filterFoods(foodType: FoodType) {
-        _currentFoodType.value = foodType
+    fun filterFoods(foodType: String) {
+        _currentFoodTypeId.value = foodType
     }
 
     fun launchToAddBasket(foodDataModel: FoodDataModel) {
@@ -102,7 +101,7 @@ class MenuViewModel @AssistedInject constructor(
     }
 
     fun retry(){
-        filterFoods(_currentFoodType.value ?: FoodType.ALL)
+        filterFoods(_currentFoodTypeId.value ?: "ALL")
     }
 
     fun launchToPlaceDelivery() {

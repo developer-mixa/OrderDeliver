@@ -9,8 +9,8 @@ import javax.inject.Singleton
 class GetAllPriceUseCase @Inject constructor(
     private val getPriceForSubjectUseCase: GetPriceForSubjectUseCase
 ) {
-    operator fun invoke(basketModels: List<BasketModel>): Int{
-        var result = 0
+    operator fun invoke(basketModels: List<BasketModel>): Float{
+        var result = 0f
         basketModels.forEach {
             if (it.count == 0) throw ZeroItemException()
             result += getPriceForSubjectUseCase(it)

@@ -5,9 +5,9 @@ data class PaymentModel(
     override val address: String,
     override val card: String,
     val allCountSubjects: Int,
-    val priceWithoutDiscount: Int,
-    val discountSum: Int,
-    override val donePrice: Int,
+    val priceWithoutDiscount: Float,
+    val discountSum: Float,
+    override val donePrice: Float,
     override val baskets: List<BasketModel>,
     override val date: String
 ) : OrderModel

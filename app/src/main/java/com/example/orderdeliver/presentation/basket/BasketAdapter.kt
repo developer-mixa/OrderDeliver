@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orderdeliver.R
@@ -34,7 +35,7 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
     override fun getItemCount(): Int = baskets.size
 
     override fun onBindViewHolder(holder: BasketViewHolder, position: Int) {
-            holder.bind(baskets[position])
+        holder.bind(baskets[position])
     }
 
     override fun onBindViewHolder(
@@ -72,11 +73,16 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
 
         }
 
-        private fun settingPriceTexts(basket: BasketModel){
-            binding.textCountSubjects.text = basket.count.toString()
-            binding.textPrice.text = "${basket.foodDataModel.priceWithDiscount * basket.count} $"
-            if (basket.foodDataModel.discount != 0)
-                binding.textWithoutDiscount.text = "${basket.foodDataModel.price * basket.count} $"
+        private fun settingPriceTexts(basket: BasketModel) = with(binding){
+            textCountSubjects.text = basket.count.toString()
+            val priceWithoutDiscount = basket.foodDataModel.price * basket.count
+            textWithoutDiscount.isVisible = basket.foodDataModel.priceWithDiscount != null
+            if(basket.foodDataModel.priceWithDiscount != null){
+                textPrice.text = "${basket.foodDataModel.priceWithDiscount * basket.count} $"
+                textWithoutDiscount.text = "$priceWithoutDiscount $"
+            } else {
+                textPrice.text = "$priceWithoutDiscount $"
+            }
         }
 
         fun updateCount(bundle: Bundle) = with(binding){

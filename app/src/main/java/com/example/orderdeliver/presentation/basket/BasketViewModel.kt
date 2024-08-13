@@ -63,8 +63,8 @@ class BasketViewModel @AssistedInject constructor(
         }
     }
 
-    fun getPriceForAll(): Int{
-        if (_baskets.value == null) return 0
+    fun getPriceForAll(): Float{
+        if (_baskets.value == null) return 0f
 
         return getAllPriceUseCase(_baskets.value!!)
     }

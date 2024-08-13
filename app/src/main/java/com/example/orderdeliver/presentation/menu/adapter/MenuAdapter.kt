@@ -39,17 +39,15 @@ class MenuAdapter(private val foodActionState: FoodActionState): PagingDataAdapt
             descriptionFood.text = foodDataModel.description
             imageView.setImageResource(foodDataModel.imageResource)
 
-            val discountPrice = foodDataModel.price.toFloat() / 100 * foodDataModel.discount
-
-            val price = (foodDataModel.price - discountPrice).toInt()
+            val price = foodDataModel.priceWithDiscount ?: foodDataModel.price
 
             priceText.text = "от $price $"
 
-            if (foodDataModel.discount != 0){
+            if (foodDataModel.priceWithDiscount != null) {
                 textDiscount.text = "${foodDataModel.price} $"
             }
 
-            textDiscount.isVisible = foodDataModel.discount != 0
+            textDiscount.isVisible = foodDataModel.priceWithDiscount != null
 
             buttonAddBasket.setOnClickListener {
                 foodActionState.addBasket(foodDataModel)

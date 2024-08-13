@@ -1,10 +1,7 @@
 package com.example.orderdeliver.presentation.menu.models
 
-import com.example.orderdeliver.domain.models.FoodType
-
 data class TypeFoodModel(
     val id: String,
-    val foodType: FoodType,
-    val nameFoodType: String,
+    val foodType: String,
     val isActivated: Boolean = false
 )

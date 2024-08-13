@@ -10,7 +10,6 @@ import androidx.paging.LoadState
 import com.example.navigation.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.models.FoodDataModel
-import com.example.orderdeliver.domain.models.FoodType
 import com.example.orderdeliver.databinding.FragmentMenuBinding
 import com.example.orderdeliver.utils.getHorizontalLayoutManager
 import com.example.orderdeliver.utils.getVerticalLayoutManager
@@ -51,9 +50,9 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
 
 
     private val typeFoodState = object : TypeFoodState {
-        override fun tap(id: String, foodType: FoodType) {
+        override fun tap(id: String, foodTypeId: String) {
             viewModel.setStateTypesById(id)
-            viewModel.filterFoods(foodType)
+            viewModel.filterFoods(foodTypeId)
         }
     }
 
@@ -91,6 +90,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         }
 
         viewModel.typeFoods.observe(viewLifecycleOwner) { types ->
+            println("types is $types")
             typeFoodAdapter.updateList(types)
         }
 
