@@ -1,17 +1,22 @@
 package com.example.orderdeliver.data.repositories
 
 import android.annotation.SuppressLint
+import com.example.orderdeliver.data.base.BaseRetrofitSource
+import com.example.orderdeliver.data.models.RetrofitConfig
 import com.example.orderdeliver.domain.models.BasketModel
 import com.example.orderdeliver.domain.models.PaymentModel
 import com.example.orderdeliver.domain.repositories.AddressRepository
 import com.example.orderdeliver.domain.Container
 import com.example.orderdeliver.domain.repositories.PaymasterRepository
 import com.example.orderdeliver.domain.SuccessContainer
+import com.example.orderdeliver.domain.api.ProductsApi
 import com.example.orderdeliver.domain.exceptions.ZeroItemException
-import com.example.orderdeliver.domain.sources.OrderStorySource
+import com.example.orderdeliver.domain.requests.RequestBuy
 import com.example.orderdeliver.domain.usecases.GetAllPriceUseCase
 import com.example.orderdeliver.domain.usecases.GetPriceForSubjectUseCase
+import com.squareup.moshi.Moshi
 import kotlinx.coroutines.delay
+import retrofit2.Retrofit
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.UUID
@@ -23,10 +28,17 @@ class DefaultPaymasterRepository @Inject constructor(
     private val getAllPriceUseCase: GetAllPriceUseCase,
     private val getPriceForSubjectUseCase: GetPriceForSubjectUseCase,
     private val addressRepository: AddressRepository,
-    private val orderStorySource: OrderStorySource
-): PaymasterRepository {
+    private val moshi: Moshi,
+    private val retrofit: Retrofit
+): PaymasterRepository, BaseRetrofitSource(moshi) {
+
+    private val productsApi = retrofit.create(ProductsApi::class.java)
+
     override suspend fun getPayment(baskets: List<BasketModel>, allBasketsCount: Int): Container<PaymentModel> {
         delay(1000)
+
+        // TODO (I DEED REAL PAYMENT)
+
         val payment = PaymentModel(
             UUID.randomUUID().toString(),
             addressRepository.getAddress(),
@@ -50,10 +62,9 @@ class DefaultPaymasterRepository @Inject constructor(
         return sdf.format(Date())
     }
 
-    override suspend fun pay(payment: PaymentModel): Container<String> {
-        //paying...
-        orderStorySource.add(payment)
-        return SuccessContainer("Платёж прошёл успешно!")
+    override suspend fun pay(baskets: List<BasketModel>): Container<String> = wrapRetrofitExceptions{
+        productsApi.buy(RequestBuy(baskets.map { it.toRequestProduct() }))
+        return@wrapRetrofitExceptions SuccessContainer("Платёж прошёл успешно!")
     }
 
     private fun priceForAllWithoutDiscount(basketModels: List<BasketModel>): Float {

@@ -46,22 +46,18 @@ class DefaultFoodRepository @Inject constructor(
         return foodSource.getFoods(id).find { it.id == id } ?: throw NotFoundException()
     }
 
-    override suspend fun reduceFood(id: String, reduceCount: Int) {
-        foodSource.reduceFood(id, reduceCount)
-    }
-
     private suspend fun getFoods(
         pageIndex: Int,
         pageSize: Int,
         foodTypeId: String
     ): List<FoodDataModel> {
-        println("foodTypeId: $foodTypeId")
+
         val foods = foodSource.getFoods(foodTypeId)
 
         val offset = pageIndex * pageSize
 
         val limit = min(offset + pageSize, foods.size)
-
+        // TODO (PAGING ON THE BACKEND)
         return foods.slice(offset until limit)
     }
 

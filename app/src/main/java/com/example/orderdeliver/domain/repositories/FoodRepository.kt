@@ -14,5 +14,4 @@ interface FoodRepository {
 
     suspend fun findFoodById(id: String) : FoodDataModel
 
-    suspend fun reduceFood(id: String, reduceCount: Int)
 }

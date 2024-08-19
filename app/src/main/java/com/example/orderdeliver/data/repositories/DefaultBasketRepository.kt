@@ -16,9 +16,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DefaultBasketRepository @Inject constructor(
-    private val foodRepository: FoodRepository
-) : BasketRepository {
+class DefaultBasketRepository : BasketRepository {
 
     private val mapCountBasketsById = mutableMapOf<String, BasketModel>()
 
@@ -32,6 +30,7 @@ class DefaultBasketRepository @Inject constructor(
         if (countById >= foodDataModel.maxCount){
             throw ReachedLimitException()
         }
+        // TODO (CAN BE WRITTEN BETTER)
         mapCountBasketsById[foodDataModel.fullId()] = BasketModel(foodDataModel, countById + 1)
         listBasketsFlow.emit(mapCountBasketsById.values.toList())
         allCountBaskets.emit(allCountBaskets.first() + 1)
@@ -49,6 +48,7 @@ class DefaultBasketRepository @Inject constructor(
             removeBasket(id)
             return
         }
+        // TODO (CAN BE WRITTEN BETTER)
         mapCountBasketsById[id] =
             BasketModel(mapCountBasketsById[id]!!.foodDataModel, countById - 1)
 
@@ -58,11 +58,6 @@ class DefaultBasketRepository @Inject constructor(
 
     override fun listenBaskets(): Flow<List<BasketModel>> = listBasketsFlow
     override fun listenAllCount(): Flow<Int> = allCountBaskets
-    override fun setPriceFoodById(foodDataModel: FoodDataModel, newPrice: Float) : FoodDataModel {
-        if (newPrice < 0) throw WrongPriceException(newPrice)
-
-        return foodDataModel.copy(price = newPrice)
-    }
 
     override suspend fun clear() {
         mapCountBasketsById.clear()

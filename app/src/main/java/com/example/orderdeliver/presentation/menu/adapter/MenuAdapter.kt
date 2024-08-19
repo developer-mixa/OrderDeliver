@@ -40,7 +40,7 @@ class MenuAdapter(private val foodActionState: FoodActionState): PagingDataAdapt
             imageView.setImageResource(foodDataModel.imageResource)
 
             val price = foodDataModel.priceWithDiscount ?: foodDataModel.price
-
+            // todo STRING RES
             priceText.text = "от $price $"
 
             if (foodDataModel.priceWithDiscount != null) {

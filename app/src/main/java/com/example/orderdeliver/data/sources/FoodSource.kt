@@ -15,8 +15,6 @@ class FoodSource @Inject constructor(
     private val moshi: Moshi,
     private val retrofit: Retrofit
 ) : BaseRetrofitSource(moshi) {
-    private val foods: MutableList<FoodDataModel> = mutableListOf()
-
     private val foodApi = retrofit.create(FoodApi::class.java)
 
     private var lastId = ALL_ID
@@ -25,6 +23,7 @@ class FoodSource @Inject constructor(
 
     suspend fun getTypeFoods(): List<TypeFoodModel>{
         if (typeFoods == null)
+            // TODO (Всё -> с переводом)
             typeFoods = mutableListOf(TypeFoodModel(ALL_ID, "Всё", true)).plus(
                 foodApi.getCategories().map {
                     TypeFoodModel(
@@ -51,8 +50,8 @@ class FoodSource @Inject constructor(
         return typeFoods
     }
 
-    suspend fun getFoods(foodTypeId: String): List<FoodDataModel> {
-        return foodApi.getFoods(if (foodTypeId != ALL_ID) listOf(foodTypeId) else null).map {
+    suspend fun getFoods(foodTypeId: String): List<FoodDataModel> = wrapRetrofitExceptions{
+        return@wrapRetrofitExceptions foodApi.getFoods(if (foodTypeId != ALL_ID) listOf(foodTypeId) else null).map {
             FoodDataModel(
                 it.id,
                 it.name,
@@ -66,10 +65,6 @@ class FoodSource @Inject constructor(
         }
     }
 
-    fun reduceFood(id: String, reducingCount: Int){
-        val needIndex = foods.indexOfFirst { it.id == id }
-        foods[needIndex] = foods[needIndex].copy(maxCount = foods[needIndex].maxCount - reducingCount)
-    }
 
     companion object{
         const val ALL_ID = "ALL"

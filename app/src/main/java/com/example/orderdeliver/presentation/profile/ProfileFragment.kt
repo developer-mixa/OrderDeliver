@@ -20,18 +20,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     class Screen : BaseScreen
 
     private val binding by viewBinding<FragmentProfileBinding>()
-    private val profileViewModel by viewModels<ProfileViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         renderSelectors()
-        observer()
-    }
-
-    private fun observer(){
-        profileViewModel.orderStoryCount.observe(viewLifecycleOwner){
-            binding.textCounterOrders.text = "$it"
-        }
     }
 
     private fun renderSelectors() = with(binding){

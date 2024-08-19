@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// TODO (getCountry, NOT_SELECTED_CITY WITH TRANSLATING)
+
 @Singleton
 class DefaultAddressRepository @Inject constructor(
     @ApplicationContext appContext: Context

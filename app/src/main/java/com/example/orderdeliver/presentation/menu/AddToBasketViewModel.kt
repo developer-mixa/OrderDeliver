@@ -10,9 +10,7 @@ import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.domain.models.FoodOption
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.exceptions.WrongPriceException
-import com.example.orderdeliver.domain.helpers.FoodOptionsHelper
 import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
-import com.example.orderdeliver.domain.usecases.SetPriceWithOptionUseCase
 import com.example.orderdeliver.utils.share
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory

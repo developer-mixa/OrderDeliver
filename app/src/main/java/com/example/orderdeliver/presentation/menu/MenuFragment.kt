@@ -90,7 +90,6 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         }
 
         viewModel.typeFoods.observe(viewLifecycleOwner) { types ->
-            println("types is $types")
             typeFoodAdapter.updateList(types)
         }
 

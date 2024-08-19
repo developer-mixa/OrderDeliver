@@ -103,7 +103,7 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
                 paymentContainer.isVisible = false
                 wayPaymentContainer.isVisible = true
             }
-
+            // TODO (USE RESOURCES AND RUBLES)
             textAdress.text = paymentModel.address
             textCountSubjects.text = "${paymentModel.allCountSubjects} товаров"
             textPriceWithoutDiscount.text = "${paymentModel.priceWithoutDiscount} $"
@@ -150,7 +150,7 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
                 }
 
                 is ErrorContainer -> {
-
+                    // TODO (HANDLE THE ERROR)
                 }
             }
 

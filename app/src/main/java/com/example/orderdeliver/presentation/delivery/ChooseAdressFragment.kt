@@ -60,7 +60,6 @@ class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), Cam
         super.onViewCreated(view, savedInstanceState)
         MapKitFactory.initialize(requireContext())
 
-
         viewModel.getCurrentLocation()
 
         viewModel.requestLocationPermission()
@@ -74,8 +73,6 @@ class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), Cam
 
     private fun observer() {
         viewModel.currentLocation.observe(viewLifecycleOwner) { location ->
-            showLog("current location: ")
-
             moveCameraToOurPosition(location)
         }
         viewModel.address.observe(viewLifecycleOwner) { result ->
@@ -91,7 +88,7 @@ class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), Cam
                 }
 
                 is ErrorContainer -> {
-
+                    // TODO (HANDLE ERROR)
                 }
             }
         }

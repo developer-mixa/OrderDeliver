@@ -11,6 +11,7 @@ import com.example.navigation.BaseScreen
 import com.example.navigation.BaseViewModel
 import com.example.navigation.Navigator
 import com.example.orderdeliver.R
+import com.example.orderdeliver.data.sources.FoodSource
 import com.example.orderdeliver.domain.models.BasketModel
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.domain.repositories.BasketRepository
@@ -36,7 +37,6 @@ import kotlinx.coroutines.launch
 class MenuViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
     @Assisted screen: BaseScreen,
-    private val basketRepository: BasketRepository,
     private val addToBasketUseCase: AddToBasketUseCase,
     private val getCurrentCityUseCase: GetCurrentCityUseCase,
     private val getPriceForSubjectUseCase: GetPriceForSubjectUseCase,
@@ -101,7 +101,7 @@ class MenuViewModel @AssistedInject constructor(
     }
 
     fun retry(){
-        filterFoods(_currentFoodTypeId.value ?: "ALL")
+        filterFoods(_currentFoodTypeId.value ?: FoodSource.ALL_ID)
     }
 
     fun launchToPlaceDelivery() {

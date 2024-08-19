@@ -54,7 +54,6 @@ class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose), City
     }
 
     override fun onTap(cityModel: CityModel) {
-        showLog("sign in " + cityModel.uri)
         viewModel.goBack(cityModel)
     }
 
@@ -78,7 +77,7 @@ class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose), City
 
                         cityAdapter.updateList(result.data)
                     }
-
+                    // TODO HANDLE
                     is ErrorContainer -> showLog("exception")
                     is PendingContainer -> showLog("pending")
                 }

@@ -67,8 +67,8 @@ class ChooseAddressViewModel @AssistedInject constructor(
             _address.value = SuccessContainer(doneAddress)
         }
 
-        override fun onSearchError(exception: com.yandex.runtime.Error) {
-            _address.value = ErrorContainer(Exception())
+        override fun onSearchError(exception: Error) {
+            _address.value = ErrorContainer(Exception(exception.toString()))
         }
     }
 
@@ -91,7 +91,6 @@ class ChooseAddressViewModel @AssistedInject constructor(
             if (rs is CityModel) {
                 searchManager.resolveURI(rs.title, SearchOptions(), searchListener)
                 convertAddressToPoint(searchManager, rs.title, blockSuccess = { point ->
-                    showLog("ms: ${point?.latitude} ${point?.longitude}")
                     if (point != null) {
                         _currentLocation.value = point
                     }
@@ -101,24 +100,6 @@ class ChooseAddressViewModel @AssistedInject constructor(
                 )
             }
         }
-    }
-
-
-    fun convertAddressToPoint(address: String, block: (Point?) -> Unit) {
-        searchManager.submit(
-            address,
-            Geometry.fromBoundingBox(ManualChooseViewModel.BOUNDING_BOX),
-            SearchOptions(),
-            object : Session.SearchListener {
-                override fun onSearchResponse(response: Response) {
-                    val obj = response.collection.children[0].obj ?: return
-                    block(obj.geometry[0].point)
-                }
-
-                override fun onSearchError(p0: Error) {
-                }
-
-            })
     }
 
 
@@ -146,7 +127,6 @@ class ChooseAddressViewModel @AssistedInject constructor(
         fusedLocationClient!!.lastLocation
             .addOnSuccessListener { location ->
                 if (location != null) {
-                    showLog("whaaaaaaaaaaat2 ${location.latitude} ${location.longitude}")
                     _currentLocation.value = Point(location.latitude, location.longitude)
                 }
             }

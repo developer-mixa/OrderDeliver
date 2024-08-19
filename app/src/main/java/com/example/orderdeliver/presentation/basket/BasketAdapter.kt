@@ -77,6 +77,9 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
             textCountSubjects.text = basket.count.toString()
             val priceWithoutDiscount = basket.foodDataModel.price * basket.count
             textWithoutDiscount.isVisible = basket.foodDataModel.priceWithDiscount != null
+
+            // TODO (REPLACE TO RUBLES)
+
             if(basket.foodDataModel.priceWithDiscount != null){
                 textPrice.text = "${basket.foodDataModel.priceWithDiscount * basket.count} $"
                 textWithoutDiscount.text = "$priceWithoutDiscount $"

@@ -12,5 +12,3 @@ open class BackendException(message: String) : AppException(message)
 class ParseJsonException(
     cause: Throwable
 ) : AppException(cause = cause)
-
-class InvalidCurrencyException(message: String) : Exception(message)

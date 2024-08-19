@@ -1,7 +1,6 @@
 package com.example.orderdeliver.domain
 
 import com.example.orderdeliver.catch
-import com.example.orderdeliver.domain.helpers.FoodOptionsHelper
 import com.example.orderdeliver.domain.models.FoodOption
 import com.example.orderdeliver.domain.models.PizzaSize
 import com.example.orderdeliver.domain.models.PizzaType

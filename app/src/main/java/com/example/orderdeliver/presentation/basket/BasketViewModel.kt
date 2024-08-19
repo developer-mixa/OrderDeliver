@@ -31,7 +31,6 @@ class BasketViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
     @Assisted val screen: BaseScreen,
     private val basketRepository: BasketRepository,
-    private val foodRepository: FoodRepository,
     private val paymasterRepository: PaymasterRepository,
     private val tapToMenuUseCase: TapToMenuUseCase,
     private val getAllPriceUseCase: GetAllPriceUseCase
@@ -57,10 +56,8 @@ class BasketViewModel @AssistedInject constructor(
         _payment.value = paymasterRepository.getPayment(_baskets.value ?: emptyList(), allBasketsCount)
     }
 
-    fun toMainMenu(){
-        viewModelScope.launch {
-            tapToMenuUseCase.toMain()
-        }
+    fun toMainMenu() = viewModelScope.launch{
+        tapToMenuUseCase.toMain()
     }
 
     fun getPriceForAll(): Float{
@@ -82,12 +79,10 @@ class BasketViewModel @AssistedInject constructor(
     }
 
     fun pay() = viewModelScope.launch{
+        // TODO (HANDLE ERRORS)
         val payment = _payment.value.takeSuccess() ?: return@launch
-        val result = paymasterRepository.pay(payment)
+        val result = paymasterRepository.pay(payment.baskets)
         if (result is SuccessContainer){
-            _baskets.value?.forEach {basket ->
-                foodRepository.reduceFood(basket.foodDataModel.id, basket.count)
-            }
             basketRepository.clear()
         }
     }
