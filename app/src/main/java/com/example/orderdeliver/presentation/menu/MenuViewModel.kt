@@ -7,6 +7,7 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import com.example.navigation.BaseScreen
 import com.example.navigation.BaseViewModel
 import com.example.navigation.Navigator
@@ -21,7 +22,9 @@ import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
 import com.example.orderdeliver.domain.usecases.GetCurrentCityUseCase
 import com.example.orderdeliver.domain.usecases.GetPriceForSubjectUseCase
 import com.example.orderdeliver.presentation.delivery.PlaceDeliveryFragment
+import com.example.orderdeliver.presentation.mappers.FoodToListItemMapper
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
+import com.example.orderdeliver.presentation.models.FoodListItem
 import com.example.orderdeliver.utils.share
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -31,6 +34,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -40,10 +44,11 @@ class MenuViewModel @AssistedInject constructor(
     private val addToBasketUseCase: AddToBasketUseCase,
     private val getCurrentCityUseCase: GetCurrentCityUseCase,
     private val getPriceForSubjectUseCase: GetPriceForSubjectUseCase,
+    private val foodToListItemMapper: FoodToListItemMapper,
     private val foodRepository: FoodRepository
 ) : BaseViewModel() {
 
-    val foods : Flow<PagingData<FoodDataModel>>
+    val foods : Flow<PagingData<FoodListItem>>
 
     private val _typeFoods: MutableLiveData<List<TypeFoodModel>> by lazy { MutableLiveData() }
     val typeFoods = _typeFoods.share()
@@ -52,7 +57,7 @@ class MenuViewModel @AssistedInject constructor(
     val currentCity = _currentCity.share()
 
 
-    private val _currentFoodTypeId: MutableLiveData<String> by lazy { MutableLiveData("ALL") }
+    private val _currentFoodTypeId: MutableLiveData<String> by lazy { MutableLiveData(FoodSource.ALL_ID) }
 
     init {
         foods = _currentFoodTypeId.asFlow()
@@ -60,6 +65,7 @@ class MenuViewModel @AssistedInject constructor(
             .flatMapLatest {foodType ->
                 foodRepository.getPagedFoods(foodType)
             }
+            .map { pagingData -> pagingData.map { foodToListItemMapper.map(it) } }
             .cachedIn(viewModelScope)
 
         viewModelScope.launch {

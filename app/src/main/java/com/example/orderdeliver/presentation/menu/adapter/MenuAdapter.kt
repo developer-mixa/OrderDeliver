@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.databinding.FoodItemBinding
+import com.example.orderdeliver.presentation.models.FoodListItem
 
 interface FoodActionState{
     fun select(foodDataModel: FoodDataModel)
     fun addBasket(foodDataModel: FoodDataModel)
 }
-class MenuAdapter(private val foodActionState: FoodActionState): PagingDataAdapter<FoodDataModel,MenuAdapter.MenuHolder>(MenuItemCallback()) {
+class MenuAdapter(private val foodActionState: FoodActionState): PagingDataAdapter<FoodListItem,MenuAdapter.MenuHolder>(MenuItemCallback()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuHolder {
@@ -34,27 +35,24 @@ class MenuAdapter(private val foodActionState: FoodActionState): PagingDataAdapt
 
         private val binding = FoodItemBinding.bind(view)
 
-        fun bind(foodDataModel: FoodDataModel) = with(binding){
-            nameFood.text = foodDataModel.name
-            descriptionFood.text = foodDataModel.description
-            imageView.setImageResource(foodDataModel.imageResource)
+        fun bind(foodListItem: FoodListItem) = with(binding){
+            nameFood.text = foodListItem.name
+            descriptionFood.text = foodListItem.description
+            imageView.setImageResource(foodListItem.imageResource)
 
-            val price = foodDataModel.priceWithDiscount ?: foodDataModel.price
-            // todo STRING RES
-            priceText.text = "от $price $"
+            priceText.text = foodListItem.priceText
 
-            if (foodDataModel.priceWithDiscount != null) {
-                textDiscount.text = "${foodDataModel.price} $"
+            if (foodListItem.priceWithDiscountText != null) {
+                textDiscount.text = foodListItem.priceWithDiscountText
             }
 
-            textDiscount.isVisible = foodDataModel.priceWithDiscount != null
+            textDiscount.isVisible = foodListItem.priceWithDiscountText != null
 
             buttonAddBasket.setOnClickListener {
-                foodActionState.addBasket(foodDataModel)
-
+                foodActionState.addBasket(foodListItem.original)
             }
 
-            binding.root.setOnClickListener { foodActionState.select(foodDataModel) }
+            binding.root.setOnClickListener { foodActionState.select(foodListItem.original) }
 
         }
 
@@ -62,12 +60,12 @@ class MenuAdapter(private val foodActionState: FoodActionState): PagingDataAdapt
 
 }
 
-private class MenuItemCallback : DiffUtil.ItemCallback<FoodDataModel>(){
-    override fun areItemsTheSame(oldItem: FoodDataModel, newItem: FoodDataModel): Boolean {
+private class MenuItemCallback : DiffUtil.ItemCallback<FoodListItem>(){
+    override fun areItemsTheSame(oldItem: FoodListItem, newItem: FoodListItem): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: FoodDataModel, newItem: FoodDataModel): Boolean {
+    override fun areContentsTheSame(oldItem: FoodListItem, newItem: FoodListItem): Boolean {
         return oldItem == newItem
     }
 
