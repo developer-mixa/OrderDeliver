@@ -16,7 +16,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DefaultBasketRepository : BasketRepository {
+class DefaultBasketRepository @Inject constructor(): BasketRepository {
 
     private val mapCountBasketsById = mutableMapOf<String, BasketModel>()
 

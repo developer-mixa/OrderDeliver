@@ -7,9 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.navigation.Navigator
 import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.models.FoodDataModel
-import com.example.orderdeliver.domain.models.FoodOption
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
-import com.example.orderdeliver.domain.exceptions.WrongPriceException
 import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
 import com.example.orderdeliver.utils.share
 import dagger.assisted.Assisted
@@ -21,23 +19,14 @@ import java.lang.NullPointerException
 class AddToBasketViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
     @Assisted private val screen: AddToBasketFragment.Screen,
-    private val addToBasketUseCase: AddToBasketUseCase,
-    private val setPriceWithOptionUseCase: SetPriceWithOptionUseCase
+    private val addToBasketUseCase: AddToBasketUseCase
 ) : ViewModel() {
 
     private val _currentFood = MutableLiveData<FoodDataModel>()
     val currentFood = _currentFood.share()
 
-    private val _foodOptions = MutableLiveData<Map<String,List<FoodOption>>>()
-    val foodOptions = _foodOptions.share()
-
     init {
         _currentFood.value = screen.foodDataModel
-        val options = screen.foodDataModel.options
-        if (options != null) {
-            val mapOptions = FoodOptionsHelper.toMap(options)
-            _foodOptions.value = mapOptions
-        }
     }
 
     fun back() = navigator.goBack()
@@ -52,19 +41,6 @@ class AddToBasketViewModel @AssistedInject constructor(
         }
 
         navigator.goBack()
-    }
-
-    fun setPrice(foodOption: FoodOption) = viewModelScope.launch{
-        try {
-            val foodWithNewPrice = setPriceWithOptionUseCase(_currentFood.value!!, foodOption)
-            if (foodWithNewPrice != null){
-                _currentFood.value = foodWithNewPrice!!
-            }
-        }catch (e: WrongPriceException){
-            navigator.toast("The owner made the wrong price, this < 0")
-        }catch (e: NullPointerException){
-            navigator.toast("Unexpected error, current food == null, try to go here again.")
-        }
     }
 
     @AssistedFactory
