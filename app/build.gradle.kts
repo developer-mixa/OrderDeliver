@@ -90,7 +90,6 @@ dependencies {
     testImplementation(libs.test.mockk)
 
     implementation(project(":navigation"))
-    implementation(project(":core"))
 
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

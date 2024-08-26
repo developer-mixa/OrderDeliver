@@ -57,5 +57,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "OrderDeliver"
 include(":app")
-include(":core")
 include (":navigation")
