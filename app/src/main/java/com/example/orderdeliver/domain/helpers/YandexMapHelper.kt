@@ -9,11 +9,17 @@ import com.yandex.mapkit.search.SearchOptions
 import com.yandex.mapkit.search.Session
 import com.yandex.runtime.Error
 
+typealias SuccessPointBlock = (Point?) -> Unit
+typealias ErrorPointBlock = (String) -> Unit
+
 object YandexMapHelper {
 
-    // TODO (Use typealias)
-
-    fun convertAddressToPoint(searchManager: SearchManager, address: String, blockSuccess: (Point?) -> Unit, blockError: ((String) -> Unit)? = null) {
+    fun convertAddressToPoint(
+        searchManager: SearchManager,
+        address: String,
+        blockSuccess: SuccessPointBlock,
+        blockError: ErrorPointBlock? = null
+    ) {
         searchManager.submit(
             address,
             Geometry.fromBoundingBox(ManualChooseViewModel.BOUNDING_BOX),
@@ -21,10 +27,10 @@ object YandexMapHelper {
             object : Session.SearchListener {
                 override fun onSearchResponse(response: Response) {
                     val obj = response.collection.children[0].obj
-                    if (obj == null){
+                    if (obj == null) {
                         if (blockError == null) return
                         blockError("Objects aren't found, object == null")
-                    }else {
+                    } else {
                         blockSuccess(obj.geometry[0].point)
                     }
 

@@ -1,5 +1,6 @@
 package com.example.orderdeliver.presentation.menu
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -11,7 +12,6 @@ import com.example.orderdeliver.databinding.FragmentAddToBasketBinding
 import com.example.orderdeliver.presentation.navigation.getBaseScreen
 import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
-import com.example.orderdeliver.utils.showLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -44,18 +44,15 @@ class AddToBasketFragment : Fragment(R.layout.fragment_add_to_basket) {
         buttonAddToBasket.setOnClickListener { viewModel.addBasket() }
     }
 
+    @SuppressLint("StringFormatMatches")
     private fun observeFoodModel() {
-        viewModel.currentFood.observe(viewLifecycleOwner) {currentFood->
-            showLog(currentFood.price.toString())
+        viewModel.foodPrice.observe(viewLifecycleOwner) { currentFood->
             binding.apply {
                 currentFood.run {
                     foodPhoto.setImageResource(imageResource)
                     nameFood.text = name
                     descFood.text = description
-                    // TODO (STRING RES)
-                    if (priceWithDiscount == null)
-                        buttonAddToBasket.text = "В корзину за $price $"
-                    else buttonAddToBasket.text = "В корзину за $priceWithDiscount $"
+                    buttonAddToBasket.text = getString(R.string.add_to_basket, finalPrice)
                 }
             }
         }

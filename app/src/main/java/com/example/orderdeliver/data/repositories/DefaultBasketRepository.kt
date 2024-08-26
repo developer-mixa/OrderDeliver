@@ -26,12 +26,12 @@ class DefaultBasketRepository @Inject constructor(): BasketRepository {
 
 
     override suspend fun addBasket(foodDataModel: FoodDataModel) {
-        val countById = (mapCountBasketsById[foodDataModel.fullId()]?.count ?: 0)
+        val foodId = foodDataModel.fullId()
+        val countById = (mapCountBasketsById[foodId]?.count ?: 0)
         if (countById >= foodDataModel.maxCount){
             throw ReachedLimitException()
         }
-        // TODO (CAN BE WRITTEN BETTER)
-        mapCountBasketsById[foodDataModel.fullId()] = BasketModel(foodDataModel, countById + 1)
+        mapCountBasketsById[foodId] = BasketModel(foodDataModel, countById + 1)
         listBasketsFlow.emit(mapCountBasketsById.values.toList())
         allCountBaskets.emit(allCountBaskets.first() + 1)
     }
@@ -48,10 +48,8 @@ class DefaultBasketRepository @Inject constructor(): BasketRepository {
             removeBasket(id)
             return
         }
-        // TODO (CAN BE WRITTEN BETTER)
         mapCountBasketsById[id] =
             BasketModel(mapCountBasketsById[id]!!.foodDataModel, countById - 1)
-
         listBasketsFlow.emit(mapCountBasketsById.values.toList())
         allCountBaskets.emit(allCountBaskets.first() - 1)
     }

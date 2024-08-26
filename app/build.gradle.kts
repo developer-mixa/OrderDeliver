@@ -1,4 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile
+import com.android.build.api.dsl.ApplicationDefaultConfig
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -6,6 +7,13 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
     id("kotlin-parcelize")
+}
+
+fun ApplicationDefaultConfig.addBuildConfigField(keyName: String, localKeyName: String){
+    val properties = Properties()
+    properties.load(project.rootProject.file("local.properties").reader())
+    val localKey = properties.getProperty(localKeyName)
+    buildConfigField("String", keyName, "\"$localKey\"")
 }
 
 android {
@@ -18,8 +26,11 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // config fields
+        addBuildConfigField("YANDEX_API_KEY", "yandex_key")
+        addBuildConfigField("BACKEND_API_KEY", "server_key")
     }
 
     buildTypes {

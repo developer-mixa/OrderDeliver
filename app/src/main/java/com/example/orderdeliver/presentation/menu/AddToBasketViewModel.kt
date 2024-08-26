@@ -1,15 +1,18 @@
 package com.example.orderdeliver.presentation.menu
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.navigation.Navigator
 import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
-import com.example.orderdeliver.utils.share
+import com.example.orderdeliver.presentation.mappers.FoodToViewItemMapper
+import com.example.orderdeliver.presentation.models.FoodItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -19,11 +22,15 @@ import java.lang.NullPointerException
 class AddToBasketViewModel @AssistedInject constructor(
     @Assisted private val navigator: Navigator,
     @Assisted private val screen: AddToBasketFragment.Screen,
-    private val addToBasketUseCase: AddToBasketUseCase
+    private val addToBasketUseCase: AddToBasketUseCase,
+    private val foodToViewItemMapper: FoodToViewItemMapper
 ) : ViewModel() {
 
     private val _currentFood = MutableLiveData<FoodDataModel>()
-    val currentFood = _currentFood.share()
+
+    val foodPrice: LiveData<FoodItem> = _currentFood.map {
+        foodToViewItemMapper.map(it)
+    }
 
     init {
         _currentFood.value = screen.foodDataModel
@@ -37,7 +44,7 @@ class AddToBasketViewModel @AssistedInject constructor(
         }catch (_: ReachedLimitException) {
             navigator.toast(R.string.reached_limit_text)
         }catch (_ : NullPointerException){
-            navigator.toast("The good wasn't added to basket. e: NullPointerException")
+            navigator.toast("The good wasn't added to basket.")
         }
 
         navigator.goBack()

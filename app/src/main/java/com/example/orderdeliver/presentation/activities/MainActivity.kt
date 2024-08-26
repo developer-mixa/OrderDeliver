@@ -6,14 +6,13 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks
 import androidx.lifecycle.ViewModelProvider
 import com.example.navigation.BaseFragment
+import com.example.orderdeliver.BuildConfig
 import com.example.orderdeliver.R
 import com.example.orderdeliver.databinding.ActivityMainBinding
 import com.example.orderdeliver.presentation.main.MainFragment
 import com.example.orderdeliver.presentation.navigation.MainNavigator
-import com.example.orderdeliver.utils.Const
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,9 +24,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MapKitFactory.setApiKey(Const.YANDEX_KEY)
+        MapKitFactory.setApiKey(BuildConfig.YANDEX_API_KEY)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         if (savedInstanceState == null){
             navigator.launchFragment(this, MainFragment.Screen(), idFragment = R.id.fragmentMainContainer)
         }

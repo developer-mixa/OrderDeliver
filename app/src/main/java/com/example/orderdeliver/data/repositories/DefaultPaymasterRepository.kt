@@ -1,6 +1,8 @@
 package com.example.orderdeliver.data.repositories
 
 import android.annotation.SuppressLint
+import android.content.Context
+import com.example.orderdeliver.R
 import com.example.orderdeliver.data.base.BaseRetrofitSource
 import com.example.orderdeliver.data.models.RetrofitConfig
 import com.example.orderdeliver.domain.models.BasketModel
@@ -15,6 +17,7 @@ import com.example.orderdeliver.domain.requests.RequestBuy
 import com.example.orderdeliver.domain.usecases.GetAllPriceUseCase
 import com.example.orderdeliver.domain.usecases.GetPriceForSubjectUseCase
 import com.squareup.moshi.Moshi
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import retrofit2.Retrofit
 import java.text.SimpleDateFormat
@@ -29,15 +32,17 @@ class DefaultPaymasterRepository @Inject constructor(
     private val getPriceForSubjectUseCase: GetPriceForSubjectUseCase,
     private val addressRepository: AddressRepository,
     private val moshi: Moshi,
-    private val retrofit: Retrofit
-): PaymasterRepository, BaseRetrofitSource(moshi) {
+    private val retrofit: Retrofit,
+    @ApplicationContext private val context: Context
+) : PaymasterRepository, BaseRetrofitSource(moshi) {
 
     private val productsApi = retrofit.create(ProductsApi::class.java)
 
-    override suspend fun getPayment(baskets: List<BasketModel>, allBasketsCount: Int): Container<PaymentModel> {
+    override suspend fun getPayment(
+        baskets: List<BasketModel>,
+        allBasketsCount: Int
+    ): Container<PaymentModel> {
         delay(1000)
-
-        // TODO (I DEED REAL PAYMENT)
 
         val payment = PaymentModel(
             UUID.randomUUID().toString(),
@@ -62,20 +67,23 @@ class DefaultPaymasterRepository @Inject constructor(
         return sdf.format(Date())
     }
 
-    override suspend fun pay(baskets: List<BasketModel>): Container<String> = wrapRetrofitExceptions{
-        productsApi.buy(RequestBuy(baskets.map { it.toRequestProduct() }))
-        return@wrapRetrofitExceptions SuccessContainer("Платёж прошёл успешно!")
-    }
+    override suspend fun pay(baskets: List<BasketModel>): Container<String> =
+        wrapRetrofitExceptions {
+            productsApi.buy(RequestBuy(baskets.map { it.toRequestProduct() }))
+            return@wrapRetrofitExceptions SuccessContainer(context.getString(R.string.payment_was_successful))
+        }
 
     private fun priceForAllWithoutDiscount(basketModels: List<BasketModel>): Float {
         var result = 0f
         basketModels.forEach {
             if (it.count == 0) throw ZeroItemException()
-            val subjectWithoutDiscount = it.copy(foodDataModel = it.foodDataModel.copy(priceWithDiscount = null))
+            val subjectWithoutDiscount =
+                it.copy(foodDataModel = it.foodDataModel.copy(priceWithDiscount = null))
             result += getPriceForSubjectUseCase(subjectWithoutDiscount)
         }
         return result
     }
+
     private fun getDiscountCount(basketModels: List<BasketModel>): Float {
         var resultWithDiscount = 0f
         var resultWithoutDiscount = 0f
@@ -83,7 +91,8 @@ class DefaultPaymasterRepository @Inject constructor(
         basketModels.forEach {
             if (it.count == 0) throw ZeroItemException()
             resultWithDiscount += getPriceForSubjectUseCase(it)
-            val subjectWithoutDiscount = it.copy(foodDataModel = it.foodDataModel.copy(priceWithDiscount = null))
+            val subjectWithoutDiscount =
+                it.copy(foodDataModel = it.foodDataModel.copy(priceWithDiscount = null))
             resultWithoutDiscount += getPriceForSubjectUseCase(subjectWithoutDiscount)
         }
         return resultWithoutDiscount - resultWithDiscount

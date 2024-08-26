@@ -15,7 +15,6 @@ import com.example.orderdeliver.R
 import com.example.orderdeliver.data.sources.FoodSource
 import com.example.orderdeliver.domain.models.BasketModel
 import com.example.orderdeliver.domain.models.FoodDataModel
-import com.example.orderdeliver.domain.repositories.BasketRepository
 import com.example.orderdeliver.domain.repositories.FoodRepository
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
@@ -88,10 +87,8 @@ class MenuViewModel @AssistedInject constructor(
     }
 
     fun launchToAddBasket(foodDataModel: FoodDataModel) {
-        val priceWithDiscount = getPriceForSubjectUseCase(BasketModel(foodDataModel, 1))
-
         navigator.launch(
-            screen = AddToBasketFragment.Screen(foodDataModel.copy(priceWithDiscount = priceWithDiscount)),
+            screen = AddToBasketFragment.Screen(foodDataModel),
             addToBackStack = true,
             aboveAll = true
         )

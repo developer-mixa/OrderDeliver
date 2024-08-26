@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.navigation.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.models.FoodDataModel
-import com.example.orderdeliver.domain.models.PaymentModel
 import com.example.orderdeliver.databinding.BottomSheetBasketBinding
 import com.example.orderdeliver.databinding.FragmentBasketBinding
 import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
+import com.example.orderdeliver.presentation.models.PaymentItem
 import com.example.orderdeliver.presentation.navigation.getBaseScreen
 import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
@@ -82,7 +82,7 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
         binding.buttonBuy.setOnClickListener { viewModel.getPayment() }
     }
 
-    private fun showPayment(paymentModel: PaymentModel) {
+    private fun showPayment(payment: PaymentItem) {
 
 
         val dialogView = layoutInflater.inflate(R.layout.bottom_sheet_basket, null)
@@ -103,12 +103,13 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
                 paymentContainer.isVisible = false
                 wayPaymentContainer.isVisible = true
             }
-            // TODO (USE RESOURCES AND RUBLES)
-            textAdress.text = paymentModel.address
-            textCountSubjects.text = "${paymentModel.allCountSubjects} товаров"
-            textPriceWithoutDiscount.text = "${paymentModel.priceWithoutDiscount} $"
-            textDiscount.text = "-${paymentModel.discountSum} $"
-            textPriceOrder.text = "${paymentModel.donePrice} $"
+
+            textAdress.text = payment.address
+            textCountSubjects.text = payment.countOrdersText
+            textPriceWithoutDiscount.text = payment.withoutDiscountPriceText
+            textDiscount.text = payment.discountSumText
+            textPriceOrder.text = payment.finalPriceText
+
             paymentLayout.setOnClickListener {
                 hide()
             }
@@ -140,7 +141,7 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
         viewModel.payment.observe(viewLifecycleOwner) { resultPayment ->
 
             when (resultPayment) {
-                is SuccessContainer<PaymentModel> -> {
+                is SuccessContainer<PaymentItem> -> {
                     setLoadingStatePendingButton(true)
                     showPayment(resultPayment.data)
                 }

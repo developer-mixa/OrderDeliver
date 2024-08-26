@@ -9,9 +9,9 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orderdeliver.R
-import com.example.orderdeliver.domain.models.BasketModel
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.databinding.BasketItemBinding
+import com.example.orderdeliver.presentation.models.BasketListItem
 import com.example.orderdeliver.utils.setList
 
 interface BasketCountState{
@@ -24,7 +24,7 @@ interface BasketCountState{
 
 class BasketAdapter(private val basketCountState: BasketCountState): RecyclerView.Adapter<BasketAdapter.BasketViewHolder>() {
 
-    private var baskets: ArrayList<BasketModel> = ArrayList()
+    private var baskets: ArrayList<BasketListItem> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasketViewHolder{
         val inflater = LayoutInflater.from(parent.context)
@@ -47,7 +47,7 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
         else holder.updateCount(payloads.last() as Bundle)
     }
 
-    fun updateList(newList: List<BasketModel>){
+    fun updateList(newList: List<BasketListItem>){
         val diffCallback = BasketDiffCallback(baskets, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallback,true)
         diffResult.dispatchUpdatesTo(this)
@@ -57,41 +57,33 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
 
     class BasketViewHolder(view: View,private val basketCountState: BasketCountState): RecyclerView.ViewHolder(view){
         private val binding: BasketItemBinding = BasketItemBinding.bind(view)
-        fun bind(basketModel: BasketModel) = with(binding){
-            val foodDataModel = basketModel.foodDataModel
-            imageProduct.setImageResource(foodDataModel.imageResource)
-            settingPriceTexts(basketModel)
-            textNameSubject.text = foodDataModel.name
+        fun bind(basket: BasketListItem) = with(binding){
+
+            imageProduct.setImageResource(basket.imageResource)
+            settingPriceTexts(basket)
+            textNameSubject.text = basket.foodName
 
             minusContainer.setOnClickListener {
-                basketCountState.minus(foodDataModel.fullId())
+                basketCountState.minus(basket.foodId)
             }
 
             plusContainer.setOnClickListener {
-                basketCountState.plus(foodDataModel)
+                basketCountState.plus(basket.food)
             }
 
         }
 
-        private fun settingPriceTexts(basket: BasketModel) = with(binding){
-            textCountSubjects.text = basket.count.toString()
-            val priceWithoutDiscount = basket.foodDataModel.price * basket.count
-            textWithoutDiscount.isVisible = basket.foodDataModel.priceWithDiscount != null
-
-            // TODO (REPLACE TO RUBLES)
-
-            if(basket.foodDataModel.priceWithDiscount != null){
-                textPrice.text = "${basket.foodDataModel.priceWithDiscount * basket.count} $"
-                textWithoutDiscount.text = "$priceWithoutDiscount $"
-            } else {
-                textPrice.text = "$priceWithoutDiscount $"
-            }
+        private fun settingPriceTexts(basket: BasketListItem) = with(binding){
+            textCountSubjects.text = basket.countText
+            textWithoutDiscount.isVisible = basket.withoutDiscountText != null
+            textPrice.text = basket.finalPriceText
+            textWithoutDiscount.text = basket.withoutDiscountText ?: ""
         }
 
         fun updateCount(bundle: Bundle) = with(binding){
             if (bundle.containsKey(BASKET_KEY)){
                 val basket = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    bundle.getParcelable(BASKET_KEY, BasketModel::class.java)
+                    bundle.getParcelable(BASKET_KEY, BasketListItem::class.java)
                 } else {
                     bundle.getParcelable(BASKET_KEY)
                 }
@@ -108,9 +100,9 @@ class BasketAdapter(private val basketCountState: BasketCountState): RecyclerVie
 
 }
 
-private fun generateBasketPayload(oldItem: BasketModel, newItem: BasketModel): Bundle?{
+private fun generateBasketPayload(oldItem: BasketListItem, newItem: BasketListItem): Bundle?{
     val bundle = Bundle()
-    if (oldItem.count != newItem.count){
+    if (oldItem.countText != newItem.countText){
         bundle.putParcelable(BasketAdapter.BASKET_KEY, newItem)
     }
     if (bundle.isEmpty) return null
@@ -118,15 +110,15 @@ private fun generateBasketPayload(oldItem: BasketModel, newItem: BasketModel): B
 }
 
 private class BasketDiffCallback(
-    private val oldList: List<BasketModel>,
-    private val newList: List<BasketModel>,
+    private val oldList: List<BasketListItem>,
+    private val newList: List<BasketListItem>,
 ): DiffUtil.Callback(){
     override fun getOldListSize(): Int = oldList.size
 
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].foodDataModel.fullId() == newList[newItemPosition].foodDataModel.fullId()
+        return oldList[oldItemPosition].foodId == newList[newItemPosition].foodId
     }
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {

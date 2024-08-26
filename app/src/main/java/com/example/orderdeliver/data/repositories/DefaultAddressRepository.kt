@@ -2,6 +2,7 @@ package com.example.orderdeliver.data.repositories
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.repositories.AddressRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -9,14 +10,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// TODO (getCountry, NOT_SELECTED_CITY WITH TRANSLATING)
-
 @Singleton
 class DefaultAddressRepository @Inject constructor(
-    @ApplicationContext appContext: Context
+    @ApplicationContext private val context: Context
 ) : AddressRepository {
 
-    private val preferences: SharedPreferences = appContext.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+    private val preferences: SharedPreferences = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
     private val cityFlow = MutableStateFlow(getCurrentCity())
 
     override suspend fun writeAddress(address: String) {
@@ -32,7 +31,7 @@ class DefaultAddressRepository @Inject constructor(
         val address = getAddress()
         val street = address.split(",")[0]
         if (street.isBlank()) throw InvalidAddressException()
-        return if (street == "-") NOT_SELECTED_CITY
+        return if (street == "-") context.getString(R.string.undefined_city)
         else street
     }
 
@@ -46,11 +45,9 @@ class DefaultAddressRepository @Inject constructor(
 
     override fun getCity(): Flow<String> = cityFlow
 
-    companion object{
-        private const val APP_PREFERENCES = "app_preferences"
-        private const val PREF_ADDRESS_VALUE = "pref_address_value"
-
-        const val NOT_SELECTED_CITY = "Не выбран город"
+    private companion object{
+        const val APP_PREFERENCES = "app_preferences"
+        const val PREF_ADDRESS_VALUE = "pref_address_value"
     }
 
 

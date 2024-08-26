@@ -1,8 +1,10 @@
 package com.example.orderdeliver.presentation.basket
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.navigation.BaseScreen
 import com.example.navigation.Navigator
@@ -16,11 +18,14 @@ import com.example.orderdeliver.domain.repositories.PaymasterRepository
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
-import com.example.orderdeliver.domain.repositories.FoodRepository
+import com.example.orderdeliver.domain.mapView
 import com.example.orderdeliver.domain.takeSuccess
 import com.example.orderdeliver.domain.usecases.GetAllPriceUseCase
 import com.example.orderdeliver.domain.usecases.TapToMenuUseCase
-import com.example.orderdeliver.utils.share
+import com.example.orderdeliver.presentation.mappers.BasketToListItemMapper
+import com.example.orderdeliver.presentation.mappers.PaymentToViewItemMapper
+import com.example.orderdeliver.presentation.models.BasketListItem
+import com.example.orderdeliver.presentation.models.PaymentItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -33,14 +38,22 @@ class BasketViewModel @AssistedInject constructor(
     private val basketRepository: BasketRepository,
     private val paymasterRepository: PaymasterRepository,
     private val tapToMenuUseCase: TapToMenuUseCase,
-    private val getAllPriceUseCase: GetAllPriceUseCase
+    private val getAllPriceUseCase: GetAllPriceUseCase,
+    private val basketToListItemMapper: BasketToListItemMapper,
+    private val paymentToViewItemMapper: PaymentToViewItemMapper
 ): ViewModel() {
 
     private val _baskets: MutableLiveData<List<BasketModel>?> = MutableLiveData()
-    val baskets = _baskets.share()
+    val baskets: LiveData<List<BasketListItem>?> = _baskets.map {
+        it?.map {basket ->
+            basketToListItemMapper.map(basket)
+        }
+    }
 
     private val _payment: MutableLiveData<Container<PaymentModel>> = MutableLiveData()
-    val payment = _payment.share()
+    val payment: LiveData<Container<PaymentItem>> = _payment.map {
+        it.mapView(paymentToViewItemMapper)
+    }
 
     init {
         viewModelScope.launch {

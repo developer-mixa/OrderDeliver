@@ -1,11 +1,13 @@
 package com.example.orderdeliver.data.sources
 
+import android.content.Context
 import com.example.orderdeliver.R
 import com.example.orderdeliver.data.base.BaseRetrofitSource
 import com.example.orderdeliver.domain.api.FoodApi
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import com.squareup.moshi.Moshi
+import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +15,8 @@ import javax.inject.Singleton
 @Singleton
 class FoodSource @Inject constructor(
     private val moshi: Moshi,
-    private val retrofit: Retrofit
+    private val retrofit: Retrofit,
+    @ApplicationContext private val context: Context
 ) : BaseRetrofitSource(moshi) {
     private val foodApi = retrofit.create(FoodApi::class.java)
 
@@ -23,8 +26,7 @@ class FoodSource @Inject constructor(
 
     suspend fun getTypeFoods(): List<TypeFoodModel>{
         if (typeFoods == null)
-            // TODO (Всё -> с переводом)
-            typeFoods = mutableListOf(TypeFoodModel(ALL_ID, "Всё", true)).plus(
+            typeFoods = mutableListOf(TypeFoodModel(ALL_ID, context.getString(R.string.all), true)).plus(
                 foodApi.getCategories().map {
                     TypeFoodModel(
                         it.id,

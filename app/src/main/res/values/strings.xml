@@ -8,4 +8,9 @@
     <string name="reached_limit_text">Достигнут лимит этого товара!</string>
     <string name="from_price">от %1$s $</string>
     <string name="price_with_mate">%1$s $</string>
+    <string name="all">Всё</string>
+    <string name="undefined_city">Не выбран город</string>
+    <string name="products_count">%1$s товаров</string>
+    <string name="payment_was_successful">Платёж прошёл успешно!</string>
+    <string name="add_to_basket">В корзину за %1$s</string>
 </resources>

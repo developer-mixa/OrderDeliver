@@ -23,7 +23,6 @@ import com.example.orderdeliver.utils.share
 import com.example.orderdeliver.utils.showLog
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.yandex.mapkit.geometry.Geometry
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.search.Address
 import com.yandex.mapkit.search.Response
@@ -58,9 +57,9 @@ class ChooseAddressViewModel @AssistedInject constructor(
 
     private val searchListener = object : Session.SearchListener {
         override fun onSearchResponse(response: Response) {
-            val street = getNameKindComponent(response, Address.Component.Kind.STREET)
-            val house = getNameKindComponent(response, Address.Component.Kind.HOUSE)
-            val city = getNameKindComponent(response, Address.Component.Kind.LOCALITY)
+            val street = getNameByKindComponent(response, Address.Component.Kind.STREET)
+            val house = getNameByKindComponent(response, Address.Component.Kind.HOUSE)
+            val city = getNameByKindComponent(response, Address.Component.Kind.LOCALITY)
 
             val doneAddress = "$city, $street, $house"
 
@@ -92,7 +91,7 @@ class ChooseAddressViewModel @AssistedInject constructor(
                 searchManager.resolveURI(rs.title, SearchOptions(), searchListener)
                 convertAddressToPoint(searchManager, rs.title, blockSuccess = { point ->
                     if (point != null) {
-                        _currentLocation.value = point
+                        _currentLocation.value = point!!
                     }
                 }, blockError = {
                     showLog(it)
@@ -132,6 +131,8 @@ class ChooseAddressViewModel @AssistedInject constructor(
             }
     }
 
+    // TODO (Убрать android зависимости из ViewModel0)
+
     fun requestLocationPermission() = navigator.activityScope {
         if (ActivityCompat.checkSelfPermission(
                 it,
@@ -152,7 +153,7 @@ class ChooseAddressViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getNameKindComponent(
+    private fun getNameByKindComponent(
         response: Response,
         kind: Address.Component.Kind,
         messageIfNotFound: String = "-",
