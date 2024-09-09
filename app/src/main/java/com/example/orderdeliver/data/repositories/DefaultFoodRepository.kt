@@ -1,6 +1,5 @@
 package com.example.orderdeliver.data.repositories
 
-import android.content.res.Resources.NotFoundException
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -10,10 +9,10 @@ import com.example.orderdeliver.data.sources.FoodSource
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.domain.repositories.FoodRepository
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.min
 
 @Singleton
 class DefaultFoodRepository @Inject constructor(
@@ -42,23 +41,14 @@ class DefaultFoodRepository @Inject constructor(
         return foodSource.setActivatedTypeFoodById(id)
     }
 
-    override suspend fun findFoodById(id: String): FoodDataModel {
-        return foodSource.getFoods(id).find { it.id == id } ?: throw NotFoundException()
-    }
-
     private suspend fun getFoods(
         pageIndex: Int,
         pageSize: Int,
         foodTypeId: String
     ): List<FoodDataModel> {
-
-        val foods = foodSource.getFoods(foodTypeId)
-
         val offset = pageIndex * pageSize
-
-        val limit = min(offset + pageSize, foods.size)
-        // TODO (PAGING ON THE BACKEND)
-        return foods.slice(offset until limit)
+        delay(1000) // test delay
+        return foodSource.getFoods(foodTypeId, offset, pageSize)
     }
 
     companion object{

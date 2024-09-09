@@ -18,7 +18,6 @@ class FoodPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, FoodDataModel> {
         val pageIndex = params.key ?: 0
-
         return try {
             val foods = foodPageLoader(pageIndex, params.loadSize)
             return LoadResult.Page(
@@ -27,7 +26,6 @@ class FoodPagingSource(
                 nextKey = if (foods.size == params.loadSize) pageIndex + (params.loadSize / pageSize) else null
             )
         } catch (e: Exception){
-            println(e)
             LoadResult.Error(throwable = e)
         }
 
