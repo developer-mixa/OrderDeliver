@@ -24,18 +24,19 @@ class FoodSource @Inject constructor(
 
     private var typeFoods: MutableList<TypeFoodModel>? = null
 
-    suspend fun getTypeFoods(): List<TypeFoodModel>{
+    suspend fun getTypeFoods(): List<TypeFoodModel> = wrapRetrofitExceptions {
         if (typeFoods == null)
-            typeFoods = mutableListOf(TypeFoodModel(ALL_ID, context.getString(R.string.all), true)).plus(
-                foodApi.getCategories().map {
-                    TypeFoodModel(
-                        it.id,
-                        it.name,
-                        false
-                    )
-                }
-            ).toMutableList()
-        return typeFoods!!
+            typeFoods =
+                mutableListOf(TypeFoodModel(ALL_ID, context.getString(R.string.all), true)).plus(
+                    foodApi.getCategories().map {
+                        TypeFoodModel(
+                            it.id,
+                            it.name,
+                            false
+                        )
+                    }
+                ).toMutableList()
+        return@wrapRetrofitExceptions typeFoods!!
     }
 
     fun setActivatedTypeFoodById(id: String): List<TypeFoodModel>? {
@@ -52,23 +53,29 @@ class FoodSource @Inject constructor(
         return typeFoods
     }
 
-    suspend fun getFoods(foodTypeId: String): List<FoodDataModel> = wrapRetrofitExceptions{
-        return@wrapRetrofitExceptions foodApi.getFoods(if (foodTypeId != ALL_ID) listOf(foodTypeId) else null).map {
-            FoodDataModel(
-                it.id,
-                it.name,
-                it.description,
-                it.weight.toFloat(),
-                it.price,
-                R.drawable.test_pizza_one,
-                if(it.discount != null) it.discount.value else null,
-                10,
-            )
+    suspend fun getFoods(foodTypeId: String, offset: Int, limit: Int): List<FoodDataModel> =
+        wrapRetrofitExceptions {
+            return@wrapRetrofitExceptions foodApi.getFoods(
+                offset,
+                limit,
+                if (foodTypeId != ALL_ID) listOf(foodTypeId) else null
+            ).map {
+                // TODO MAKE MAPPER
+                FoodDataModel(
+                    it.id,
+                    it.name,
+                    it.description,
+                    it.weight.toFloat(),
+                    it.price,
+                    R.drawable.test_pizza_one,
+                    if (it.discount != null) it.discount.value else null,
+                    10,
+                )
+            }
         }
-    }
 
 
-    companion object{
+    companion object {
         const val ALL_ID = "ALL"
     }
 
