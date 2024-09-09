@@ -32,7 +32,7 @@ open class BaseRetrofitSource(moshi: Moshi) {
             val errorBody: ErrorResponseBody = errorAdapter.fromJson(
                 e.response()!!.errorBody()!!.string()
             )!!
-            BackendException(errorBody.toString())
+            BackendException(errorBody.message, e.code())
         } catch (e: Exception) {
             println(e)
             throw ParseJsonException(e)

@@ -7,7 +7,7 @@ open class AppException : RuntimeException {
 
 class ConnectionException(cause: Throwable) : AppException(cause = cause)
 
-open class BackendException(message: String) : AppException(message)
+open class BackendException(message: String, val code: Int) : AppException(message)
 
 class ParseJsonException(
     cause: Throwable
