@@ -42,7 +42,6 @@ class MenuViewModel @AssistedInject constructor(
     @Assisted screen: BaseScreen,
     private val addToBasketUseCase: AddToBasketUseCase,
     private val getCurrentCityUseCase: GetCurrentCityUseCase,
-    private val getPriceForSubjectUseCase: GetPriceForSubjectUseCase,
     private val foodToListItemMapper: FoodToListItemMapper,
     private val foodRepository: FoodRepository
 ) : BaseViewModel() {
