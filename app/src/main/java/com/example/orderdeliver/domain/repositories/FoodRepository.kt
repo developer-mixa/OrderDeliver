@@ -12,6 +12,4 @@ interface FoodRepository {
 
     fun setActivatedTypeFoodById(id: String): List<TypeFoodModel>?
 
-    suspend fun findFoodById(id: String) : FoodDataModel
-
 }
