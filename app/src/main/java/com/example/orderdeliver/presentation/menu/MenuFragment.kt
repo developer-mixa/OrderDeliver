@@ -11,6 +11,9 @@ import com.example.navigation.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.databinding.FragmentMenuBinding
+import com.example.orderdeliver.domain.ErrorContainer
+import com.example.orderdeliver.domain.PendingContainer
+import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.utils.getHorizontalLayoutManager
 import com.example.orderdeliver.utils.getVerticalLayoutManager
 import com.example.orderdeliver.presentation.menu.adapter.FoodActionState
@@ -76,8 +79,16 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         observer()
         setupAdapters()
         handleScrollingToTopWhenFiltering(menuAdapter)
-        binding.selectCityCard.setOnClickListener {
+        onClickListeners()
+    }
+
+    private fun onClickListeners() = with(binding){
+        selectCityCard.setOnClickListener {
             viewModel.launchToPlaceDelivery()
+        }
+
+        buttonTryLoadFoodTypes.setOnClickListener {
+            viewModel.getTypeFoods()
         }
     }
 
@@ -89,8 +100,14 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
             }
         }
 
-        viewModel.typeFoods.observe(viewLifecycleOwner) { types ->
-            typeFoodAdapter.updateList(types)
+        viewModel.typeFoods.observe(viewLifecycleOwner) { typesContainer ->
+
+            progressBarTypeFoods.isVisible = typesContainer is PendingContainer
+            buttonTryLoadFoodTypes.isVisible = typesContainer is ErrorContainer
+            typesRcView.isVisible = typesContainer is SuccessContainer
+            if (typesContainer is SuccessContainer){
+                typeFoodAdapter.updateList(typesContainer.data)
+            }
         }
 
         viewModel.currentCity.observe(viewLifecycleOwner) { currentCity ->

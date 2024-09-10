@@ -35,8 +35,9 @@ class DefaultFoodRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getAllFoodTypes(): List<TypeFoodModel> {
-        return foodSource.getTypeFoods()
+    override suspend fun getAllFoodTypes(): List<TypeFoodModel> = withContext(Dispatchers.IO){
+        delay(300)
+        return@withContext foodSource.getTypeFoods()
     }
 
     override fun setActivatedTypeFoodById(id: String): List<TypeFoodModel>? {

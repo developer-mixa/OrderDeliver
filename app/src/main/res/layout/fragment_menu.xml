@@ -48,12 +48,34 @@
     </LinearLayout>
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/typesRcView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="wrap_content">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <Button
+            android:id="@+id/buttonTryLoadFoodTypes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Try again"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/progressBarTypeFoods"
+            android:indeterminate="true"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/typesRcView"
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </FrameLayout>
 
     <ProgressBar
         android:id="@+id/progressBarFirstLoading"

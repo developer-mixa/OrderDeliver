@@ -13,6 +13,10 @@ import com.example.navigation.BaseViewModel
 import com.example.navigation.Navigator
 import com.example.orderdeliver.R
 import com.example.orderdeliver.data.sources.FoodSource
+import com.example.orderdeliver.domain.Container
+import com.example.orderdeliver.domain.ErrorContainer
+import com.example.orderdeliver.domain.PendingContainer
+import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.domain.repositories.FoodRepository
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
@@ -29,7 +33,6 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -47,16 +50,19 @@ class MenuViewModel @AssistedInject constructor(
 
     val foods : Flow<PagingData<FoodListItem>>
 
-    private val _typeFoods: MutableLiveData<List<TypeFoodModel>> by lazy { MutableLiveData() }
+    private val _typeFoods: MutableLiveData<Container<List<TypeFoodModel>>> by lazy { MutableLiveData() }
     val typeFoods = _typeFoods.share()
 
     private val _currentCity: MutableLiveData<String> by lazy { MutableLiveData() }
     val currentCity = _currentCity.share()
 
 
-    private val _currentFoodTypeId: MutableLiveData<String> = MutableLiveData(FoodSource.ALL_ID)
+    private val _currentFoodTypeId: MutableLiveData<String> = MutableLiveData()
 
     init {
+        getTypeFoods()
+        listenCurrentCity()
+
         foods = _currentFoodTypeId.asFlow()
             .debounce(50)
             .flatMapLatest {foodType ->
@@ -65,21 +71,29 @@ class MenuViewModel @AssistedInject constructor(
                 }
             }
             .cachedIn(viewModelScope)
+    }
 
-        viewModelScope.launch {
-            _typeFoods.value = foodRepository.getAllFoodTypes()
+    fun getTypeFoods() = viewModelScope.launch{
+        _typeFoods.value = PendingContainer()
 
-            getCurrentCityUseCase.listen().collect {
-                _currentCity.value = it
-            }
+        _typeFoods.value = try {
+            SuccessContainer(foodRepository.getAllFoodTypes())
+                .also { _currentFoodTypeId.value = FoodSource.ALL_ID }
+        } catch (e: Exception){
+            ErrorContainer(e)
         }
+    }
 
+    private fun listenCurrentCity() = viewModelScope.launch {
+        getCurrentCityUseCase.listen().collect {
+            _currentCity.value = it
+        }
     }
 
 
     fun setStateTypesById(id: String) {
         val newTypeFoods = foodRepository.setActivatedTypeFoodById(id) ?: return
-        _typeFoods.value = newTypeFoods
+        _typeFoods.value = SuccessContainer(newTypeFoods)
     }
 
     fun filterFoods(foodType: String) {
