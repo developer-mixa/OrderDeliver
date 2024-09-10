@@ -27,6 +27,7 @@ import com.example.orderdeliver.presentation.mappers.FoodToListItemMapper
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import com.example.orderdeliver.presentation.models.FoodListItem
 import com.example.orderdeliver.utils.share
+import com.example.orderdeliver.utils.showLog
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -96,7 +97,7 @@ class MenuViewModel @AssistedInject constructor(
         _typeFoods.value = SuccessContainer(newTypeFoods)
     }
 
-    fun filterFoods(foodType: String) {
+    fun filterFoods(foodType: String = FoodSource.ALL_ID) {
         _currentFoodTypeId.value = foodType
     }
 

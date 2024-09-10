@@ -1,14 +1,12 @@
 package com.example.orderdeliver.presentation.menu.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.orderdeliver.databinding.DefaultLoadStateBinding
-import com.example.orderdeliver.utils.showLog
+import com.example.orderdeliver.databinding.ErrorContainerBinding
 
 typealias TryAgainAction = () -> Unit
 
@@ -17,7 +15,7 @@ class MenuLoadStateAdapter(
 ) : LoadStateAdapter<MenuLoadStateAdapter.Holder>() {
 
     class Holder(
-        private val binding: DefaultLoadStateBinding,
+        private val binding: ErrorContainerBinding,
         private val tryAgainAction: TryAgainAction
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -38,7 +36,7 @@ class MenuLoadStateAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): Holder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = DefaultLoadStateBinding.inflate(inflater, parent, false)
+        val binding = ErrorContainerBinding.inflate(inflater, parent, true)
         return Holder(binding, tryAgainAction)
     }
 

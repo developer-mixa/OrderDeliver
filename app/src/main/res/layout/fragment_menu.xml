@@ -49,6 +49,7 @@
 
 
     <FrameLayout
+        android:id="@+id/foodTypesContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -63,10 +64,10 @@
 
         <ProgressBar
             android:id="@+id/progressBarTypeFoods"
-            android:indeterminate="true"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:indeterminate="true"
             android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -77,24 +78,30 @@
         </androidx.recyclerview.widget.RecyclerView>
     </FrameLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBarFirstLoading"
-        style="?android:attr/progressBarStyle"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/foodsRcView"
+    <FrameLayout
+        android:id="@+id/contentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header">
+        android:layout_height="match_parent">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/foodsRcView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <com.example.orderdeliver.presentation.views.LoadStateView
+            android:id="@+id/loadStateContainer"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
 
 </LinearLayout>

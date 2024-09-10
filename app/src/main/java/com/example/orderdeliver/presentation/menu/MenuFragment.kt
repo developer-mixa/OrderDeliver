@@ -25,6 +25,7 @@ import com.example.orderdeliver.presentation.navigation.getBaseScreen
 import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
 import com.example.orderdeliver.utils.collectFlow
+import com.example.orderdeliver.utils.showLog
 import com.example.orderdeliver.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
@@ -90,6 +91,12 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         buttonTryLoadFoodTypes.setOnClickListener {
             viewModel.getTypeFoods()
         }
+
+        showLog("asdasdasdasd")
+        loadStateContainer.tryAgainAction {
+            showLog("asdasdasdasd")
+            viewModel.filterFoods()
+        }
     }
 
     private fun observer() = with(binding) {
@@ -136,7 +143,8 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         getRefreshLoadStateFlow(adapter)
             .simpleScan(count = 2)
             .collectLatest { (previousState, currentState) ->
-                binding.progressBarFirstLoading.isVisible = currentState is LoadState.Loading
+                if(currentState != null)
+                    binding.loadStateContainer.defaultHandleLoadState(currentState)
                 if (previousState is LoadState.Loading && currentState is LoadState.NotLoading) {
                     binding.foodsRcView.scrollToPosition(0)
                 }
