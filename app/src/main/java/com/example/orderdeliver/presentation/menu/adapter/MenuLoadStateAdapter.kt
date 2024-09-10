@@ -36,7 +36,7 @@ class MenuLoadStateAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): Holder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ErrorContainerBinding.inflate(inflater, parent, true)
+        val binding = ErrorContainerBinding.inflate(inflater, parent, false)
         return Holder(binding, tryAgainAction)
     }
 
