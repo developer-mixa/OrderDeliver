@@ -13,13 +13,11 @@ import com.example.navigation.BaseViewModel
 import com.example.navigation.Navigator
 import com.example.orderdeliver.R
 import com.example.orderdeliver.data.sources.FoodSource
-import com.example.orderdeliver.domain.models.BasketModel
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.domain.repositories.FoodRepository
 import com.example.orderdeliver.domain.exceptions.ReachedLimitException
 import com.example.orderdeliver.domain.usecases.AddToBasketUseCase
 import com.example.orderdeliver.domain.usecases.GetCurrentCityUseCase
-import com.example.orderdeliver.domain.usecases.GetPriceForSubjectUseCase
 import com.example.orderdeliver.presentation.delivery.PlaceDeliveryFragment
 import com.example.orderdeliver.presentation.mappers.FoodToListItemMapper
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
@@ -31,6 +29,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -55,15 +54,16 @@ class MenuViewModel @AssistedInject constructor(
     val currentCity = _currentCity.share()
 
 
-    private val _currentFoodTypeId: MutableLiveData<String> by lazy { MutableLiveData(FoodSource.ALL_ID) }
+    private val _currentFoodTypeId: MutableLiveData<String> = MutableLiveData(FoodSource.ALL_ID)
 
     init {
         foods = _currentFoodTypeId.asFlow()
             .debounce(50)
             .flatMapLatest {foodType ->
-                foodRepository.getPagedFoods(foodType)
+                foodRepository.getPagedFoods(foodType).map { pagingData ->
+                    pagingData.map { foodToListItemMapper.map(it) }
+                }
             }
-            .map { pagingData -> pagingData.map { foodToListItemMapper.map(it) } }
             .cachedIn(viewModelScope)
 
         viewModelScope.launch {
@@ -75,6 +75,7 @@ class MenuViewModel @AssistedInject constructor(
         }
 
     }
+
 
     fun setStateTypesById(id: String) {
         val newTypeFoods = foodRepository.setActivatedTypeFoodById(id) ?: return
@@ -100,10 +101,6 @@ class MenuViewModel @AssistedInject constructor(
             navigator.toast(R.string.reached_limit_text)
         }
 
-    }
-
-    fun retry(){
-        filterFoods(_currentFoodTypeId.value ?: FoodSource.ALL_ID)
     }
 
     fun launchToPlaceDelivery() {

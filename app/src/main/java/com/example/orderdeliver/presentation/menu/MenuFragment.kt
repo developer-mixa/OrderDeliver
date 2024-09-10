@@ -101,7 +101,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
 
 
     private fun setupAdapters() = with(binding) {
-        val tryAgainAction = { viewModel.retry() }
+        val tryAgainAction = { menuAdapter.retry() }
 
         val footerAdapter = MenuLoadStateAdapter(tryAgainAction)
 

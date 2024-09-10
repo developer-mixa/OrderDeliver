@@ -8,6 +8,7 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.orderdeliver.databinding.DefaultLoadStateBinding
+import com.example.orderdeliver.utils.showLog
 
 typealias TryAgainAction = () -> Unit
 

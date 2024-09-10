@@ -9,8 +9,10 @@ import com.example.orderdeliver.data.sources.FoodSource
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.domain.repositories.FoodRepository
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,15 +42,14 @@ class DefaultFoodRepository @Inject constructor(
     override fun setActivatedTypeFoodById(id: String): List<TypeFoodModel>? {
         return foodSource.setActivatedTypeFoodById(id)
     }
-
     private suspend fun getFoods(
         pageIndex: Int,
         pageSize: Int,
         foodTypeId: String
-    ): List<FoodDataModel> {
+    ): List<FoodDataModel>  = withContext(Dispatchers.IO){
         val offset = pageIndex * pageSize
         delay(1000) // test delay
-        return foodSource.getFoods(foodTypeId, offset, pageSize)
+        return@withContext foodSource.getFoods(foodTypeId, offset, pageSize)
     }
 
     companion object{
