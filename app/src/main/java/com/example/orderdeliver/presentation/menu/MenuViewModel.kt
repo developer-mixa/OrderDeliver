@@ -1,16 +1,12 @@
 package com.example.orderdeliver.presentation.menu
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.example.navigation.BaseScreen
-import com.example.navigation.BaseViewModel
-import com.example.navigation.Navigator
+import com.example.orderdeliver.presentation.plugins.core.BaseViewModel
 import com.example.orderdeliver.R
 import com.example.orderdeliver.data.sources.FoodSource
 import com.example.orderdeliver.domain.Container
@@ -26,11 +22,10 @@ import com.example.orderdeliver.presentation.delivery.PlaceDeliveryFragment
 import com.example.orderdeliver.presentation.mappers.FoodToListItemMapper
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import com.example.orderdeliver.presentation.models.FoodListItem
+import com.example.orderdeliver.presentation.plugins.plugins.NavigatorPlugin
+import com.example.orderdeliver.presentation.plugins.plugins.ToastPlugin
 import com.example.orderdeliver.utils.share
-import com.example.orderdeliver.utils.showLog
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -38,11 +33,13 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-class MenuViewModel @AssistedInject constructor(
-    @Assisted private val navigator: Navigator,
-    @Assisted screen: BaseScreen,
+@HiltViewModel
+class MenuViewModel @Inject constructor(
+    private val navigator: NavigatorPlugin,
+    private val toasts: ToastPlugin,
     private val addToBasketUseCase: AddToBasketUseCase,
     private val getCurrentCityUseCase: GetCurrentCityUseCase,
     private val foodToListItemMapper: FoodToListItemMapper,
@@ -113,7 +110,7 @@ class MenuViewModel @AssistedInject constructor(
         try {
             addToBasketUseCase.invoke(foodDataModel)
         } catch (_: ReachedLimitException) {
-            navigator.toast(R.string.reached_limit_text)
+            toasts.toast(R.string.reached_limit_text)
         }
 
     }
@@ -124,25 +121,6 @@ class MenuViewModel @AssistedInject constructor(
             addToBackStack = true,
             aboveAll = true
         )
-    }
-
-    @AssistedFactory
-    interface Factory {
-        fun create(navigator: Navigator, screen: BaseScreen): MenuViewModel
-    }
-
-    companion object {
-        fun provideMenuViewModelFactory(
-            factory: Factory,
-            navigator: Navigator,
-            screen: BaseScreen
-        ): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return factory.create(navigator, screen) as T
-                }
-            }
-        }
     }
 
 }

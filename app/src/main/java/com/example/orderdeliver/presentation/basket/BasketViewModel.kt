@@ -3,11 +3,8 @@ package com.example.orderdeliver.presentation.basket
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.example.navigation.BaseScreen
-import com.example.navigation.Navigator
 import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.models.BasketModel
 import com.example.orderdeliver.domain.models.FoodDataModel
@@ -26,15 +23,15 @@ import com.example.orderdeliver.presentation.mappers.BasketToListItemMapper
 import com.example.orderdeliver.presentation.mappers.PaymentToViewItemMapper
 import com.example.orderdeliver.presentation.models.BasketListItem
 import com.example.orderdeliver.presentation.models.PaymentItem
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import com.example.orderdeliver.presentation.plugins.plugins.ToastPlugin
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BasketViewModel @AssistedInject constructor(
-    @Assisted private val navigator: Navigator,
-    @Assisted val screen: BaseScreen,
+@HiltViewModel
+class BasketViewModel @Inject constructor(
+    private val toasts: ToastPlugin,
     private val basketRepository: BasketRepository,
     private val paymasterRepository: PaymasterRepository,
     private val tapToMenuUseCase: TapToMenuUseCase,
@@ -83,7 +80,7 @@ class BasketViewModel @AssistedInject constructor(
         try {
             basketRepository.addBasket(foodDataModel)
         }catch (_: ReachedLimitException){
-            navigator.toast(R.string.reached_limit_text)
+            toasts.toast(R.string.reached_limit_text)
         }
     }
 
@@ -97,21 +94,6 @@ class BasketViewModel @AssistedInject constructor(
         val result = paymasterRepository.pay(payment.baskets)
         if (result is SuccessContainer){
             basketRepository.clear()
-        }
-    }
-
-    @AssistedFactory
-    interface Factory{
-        fun create(navigator: Navigator, screen: BaseScreen): BasketViewModel
-    }
-
-    companion object{
-        fun provideBasketViewModelFactory(factory: Factory,navigator: Navigator, screen: BaseScreen) : ViewModelProvider.Factory{
-            return object : ViewModelProvider.Factory{
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return factory.create(navigator, screen) as T
-                }
-            }
         }
     }
 

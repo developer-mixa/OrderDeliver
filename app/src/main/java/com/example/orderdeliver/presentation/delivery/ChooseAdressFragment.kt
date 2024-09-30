@@ -1,39 +1,27 @@
 package com.example.orderdeliver.presentation.delivery
 
-import android.graphics.Bitmap
-import android.graphics.PointF
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.navigation.BaseFragment
-import com.example.navigation.BaseScreen
+import com.example.orderdeliver.presentation.plugins.core.BaseFragment
+import com.example.orderdeliver.presentation.plugins.core.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.databinding.FragmentChooseAdressBinding
 import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
-import com.example.orderdeliver.presentation.navigation.getBaseScreen
-import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
 import com.example.orderdeliver.utils.markButtonDisable
-import com.example.orderdeliver.utils.showLog
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraListener
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.CameraUpdateReason
-import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.InputListener
 import com.yandex.mapkit.map.Map
-import com.yandex.mapkit.map.MapObjectCollection
-import com.yandex.mapkit.map.PlacemarkMapObject
-import com.yandex.mapkit.map.RotationType
-import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -43,16 +31,7 @@ class ChooseAddressFragment : BaseFragment(R.layout.fragment_choose_adress), Cam
 
     class Screen : BaseScreen
 
-    override val viewModel: ChooseAddressViewModel by viewModels {
-        ChooseAddressViewModel.provideChooseAddressViewModel(
-            factory,
-            getMainNavigator(),
-            getBaseScreen()
-        )
-    }
-
-    @Inject
-    lateinit var factory: ChooseAddressViewModel.Factory
+    override val viewModel: ChooseAddressViewModel by viewModels()
 
     private val scaleMapAnimation = Animation(Animation.Type.SMOOTH, 3f)
 

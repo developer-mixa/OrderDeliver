@@ -9,7 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.example.navigation.BaseScreen
+import com.example.orderdeliver.presentation.plugins.core.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.databinding.BottomSheetBasketBinding
@@ -18,14 +18,11 @@ import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.presentation.models.PaymentItem
-import com.example.orderdeliver.presentation.navigation.getBaseScreen
-import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
 import com.example.orderdeliver.utils.getVerticalLayoutManager
 import com.example.orderdeliver.utils.markButtonDisable
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class BasketFragment : Fragment(R.layout.fragment_basket) {
@@ -34,16 +31,7 @@ class BasketFragment : Fragment(R.layout.fragment_basket) {
 
     private lateinit var dialog: BottomSheetDialog
 
-    @Inject
-    lateinit var factory: BasketViewModel.Factory
-
-    private val viewModel: BasketViewModel by viewModels {
-        BasketViewModel.provideBasketViewModelFactory(
-            factory,
-            screen = getBaseScreen(),
-            navigator = getMainNavigator()
-        )
-    }
+    private val viewModel: BasketViewModel by viewModels()
 
     private val basketCountState = object : BasketCountState {
         override fun plus(foodDataModel: FoodDataModel) {

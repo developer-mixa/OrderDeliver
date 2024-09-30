@@ -3,7 +3,7 @@ package com.example.orderdeliver.data.sources
 import android.content.Context
 import com.example.orderdeliver.R
 import com.example.orderdeliver.data.base.BaseRetrofitSource
-import com.example.orderdeliver.domain.api.FoodApi
+import com.example.orderdeliver.domain.api.foods.FoodApi
 import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.presentation.menu.models.TypeFoodModel
 import com.squareup.moshi.Moshi

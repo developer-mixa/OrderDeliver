@@ -1,4 +1,4 @@
-package com.example.navigation
+package com.example.orderdeliver.presentation.plugins.core
 
 import java.io.Serializable
 

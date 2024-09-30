@@ -4,14 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.example.orderdeliver.R
 import com.example.orderdeliver.data.base.BaseRetrofitSource
-import com.example.orderdeliver.data.models.RetrofitConfig
 import com.example.orderdeliver.domain.models.BasketModel
 import com.example.orderdeliver.domain.models.PaymentModel
 import com.example.orderdeliver.domain.repositories.AddressRepository
 import com.example.orderdeliver.domain.Container
 import com.example.orderdeliver.domain.repositories.PaymasterRepository
 import com.example.orderdeliver.domain.SuccessContainer
-import com.example.orderdeliver.domain.api.ProductsApi
+import com.example.orderdeliver.domain.api.foods.ProductsApi
 import com.example.orderdeliver.domain.exceptions.ZeroItemException
 import com.example.orderdeliver.domain.requests.RequestBuy
 import com.example.orderdeliver.domain.usecases.GetAllPriceUseCase

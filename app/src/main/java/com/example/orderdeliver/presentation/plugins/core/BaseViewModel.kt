@@ -1,7 +1,6 @@
-package com.example.navigation
+package com.example.orderdeliver.presentation.plugins.core
 
 import androidx.lifecycle.ViewModel
-
 
 open class BaseViewModel: ViewModel() {
 

@@ -1,4 +1,4 @@
-package com.example.orderdeliver.domain.api
+package com.example.orderdeliver.domain.api.foods
 
 import com.example.orderdeliver.domain.requests.RequestBuy
 import retrofit2.http.Body

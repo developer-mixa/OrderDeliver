@@ -5,8 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import com.example.navigation.BaseScreen
+import com.example.orderdeliver.presentation.plugins.core.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.databinding.FragmentProfileBinding
 import com.example.orderdeliver.presentation.views.viewBinding
@@ -23,6 +22,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        renderSelectors()
+    }
+
+    private fun render(){
+
+    }
+
+    private fun renderContent(){
         renderSelectors()
     }
 

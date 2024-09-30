@@ -1,8 +1,7 @@
-package com.example.orderdeliver.domain.api
+package com.example.orderdeliver.domain.api.foods
 
 import com.example.orderdeliver.domain.responses.FoodCategoryResponse
 import com.example.orderdeliver.domain.responses.FoodResponse
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 

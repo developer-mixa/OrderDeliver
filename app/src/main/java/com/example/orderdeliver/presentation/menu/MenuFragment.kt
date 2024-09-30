@@ -7,24 +7,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
-import com.example.navigation.BaseScreen
+import com.example.orderdeliver.presentation.plugins.core.BaseScreen
 import com.example.orderdeliver.R
-import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.databinding.FragmentMenuBinding
 import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
-import com.example.orderdeliver.utils.getHorizontalLayoutManager
-import com.example.orderdeliver.utils.getVerticalLayoutManager
+import com.example.orderdeliver.domain.models.FoodDataModel
 import com.example.orderdeliver.presentation.menu.adapter.FoodActionState
 import com.example.orderdeliver.presentation.menu.adapter.MenuAdapter
 import com.example.orderdeliver.presentation.menu.adapter.MenuLoadStateAdapter
 import com.example.orderdeliver.presentation.menu.adapter.TypeFoodAdapter
 import com.example.orderdeliver.presentation.menu.adapter.TypeFoodState
-import com.example.orderdeliver.presentation.navigation.getBaseScreen
-import com.example.orderdeliver.presentation.navigation.getMainNavigator
 import com.example.orderdeliver.presentation.views.viewBinding
 import com.example.orderdeliver.utils.collectFlow
+import com.example.orderdeliver.utils.getHorizontalLayoutManager
+import com.example.orderdeliver.utils.getVerticalLayoutManager
 import com.example.orderdeliver.utils.showLog
 import com.example.orderdeliver.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +30,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MenuFragment : Fragment(R.layout.fragment_menu) {
@@ -41,16 +38,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
 
     private val binding by viewBinding<FragmentMenuBinding>()
 
-    @Inject
-    lateinit var factory: MenuViewModel.Factory
-
-    private val viewModel: MenuViewModel by viewModels {
-        MenuViewModel.provideMenuViewModelFactory(
-            factory,
-            getMainNavigator(),
-            getBaseScreen()
-        )
-    }
+    private val viewModel: MenuViewModel by viewModels()
 
 
     private val typeFoodState = object : TypeFoodState {

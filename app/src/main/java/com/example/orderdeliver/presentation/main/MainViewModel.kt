@@ -2,25 +2,21 @@ package com.example.orderdeliver.presentation.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.navigation.BaseScreen
-import com.example.navigation.Navigator
 import com.example.orderdeliver.domain.repositories.BasketRepository
 import com.example.orderdeliver.domain.usecases.TapToMenuUseCase
 import com.example.orderdeliver.presentation.basket.BasketFragment
 import com.example.orderdeliver.presentation.menu.MenuFragment
+import com.example.orderdeliver.presentation.plugins.plugins.NavigatorPlugin
 import com.example.orderdeliver.presentation.profile.ProfileFragment
 import com.example.orderdeliver.utils.share
-import com.example.orderdeliver.utils.showLog
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import dagger.assisted.AssistedFactory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel @AssistedInject constructor(
-    @Assisted private val navigator: Navigator,
-    @Assisted screen: BaseScreen,
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val navigator: NavigatorPlugin,
     private val tapToMenuUseCase: TapToMenuUseCase,
     private val defaultBasketRepository: BasketRepository,
 ) : ViewModel() {
@@ -50,26 +46,4 @@ class MainViewModel @AssistedInject constructor(
 
     fun openProfile() = navigator.launch(ProfileFragment.Screen())
 
-
-    @AssistedFactory
-    interface Factory {
-        fun create(navigator: Navigator, screen: BaseScreen): MainViewModel
-    }
-
-    companion object {
-        fun provideBasketViewModelFactory(
-            factory: Factory,
-            navigator: Navigator,
-            screen: BaseScreen,
-        ): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return factory.create(navigator, screen) as T
-                }
-            }
-        }
-    }
 }
-
-
-

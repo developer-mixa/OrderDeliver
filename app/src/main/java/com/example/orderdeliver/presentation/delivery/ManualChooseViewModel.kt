@@ -1,38 +1,35 @@
 package com.example.orderdeliver.presentation.delivery
 
 import androidx.lifecycle.viewModelScope
-import com.example.navigation.BaseViewModel
-import com.example.navigation.Navigator
+import com.example.orderdeliver.presentation.plugins.core.BaseViewModel
 import com.example.orderdeliver.domain.Container
 import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.domain.exceptions.SuggestException
 import com.example.orderdeliver.presentation.delivery.models.CityModel
-import com.example.orderdeliver.utils.showLog
+import com.example.orderdeliver.presentation.plugins.plugins.NavigatorPlugin
 import com.yandex.mapkit.geometry.BoundingBox
-import com.yandex.mapkit.geometry.Geometry
 import com.yandex.mapkit.geometry.Point
-import com.yandex.mapkit.search.Response
 import com.yandex.mapkit.search.SearchFactory
 import com.yandex.mapkit.search.SearchManagerType
-import com.yandex.mapkit.search.SearchOptions
-import com.yandex.mapkit.search.Session
 import com.yandex.mapkit.search.SuggestItem
 import com.yandex.mapkit.search.SuggestOptions
 import com.yandex.mapkit.search.SuggestSession
 import com.yandex.mapkit.search.SuggestSession.SuggestListener
 import com.yandex.mapkit.search.SuggestType
 import com.yandex.runtime.Error
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class ManualChooseViewModel(
-    private val navigator: Navigator,
-    val screen: ManualChooseFragment.Screen,
+@HiltViewModel
+class ManualChooseViewModel @Inject constructor(
+    private val navigator: NavigatorPlugin,
 ) : BaseViewModel() {
 
     private val searchManager = SearchFactory.getInstance().createSearchManager(SearchManagerType.COMBINED)

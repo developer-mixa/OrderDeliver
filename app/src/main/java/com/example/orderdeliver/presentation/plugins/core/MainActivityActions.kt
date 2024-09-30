@@ -1,4 +1,4 @@
-package com.example.navigation
+package com.example.orderdeliver.presentation.plugins.core
 
 import androidx.appcompat.app.AppCompatActivity
 
@@ -24,10 +24,6 @@ class MainActivityActions {
         } else {
             action(activity)
         }
-    }
-
-    fun clear(){
-        actions.clear()
     }
 
 }

@@ -4,27 +4,29 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.navigation.BaseFragment
-import com.example.navigation.BaseScreen
+import com.example.orderdeliver.presentation.plugins.core.BaseFragment
+import com.example.orderdeliver.presentation.plugins.core.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.databinding.FragmentManualChooseBinding
 import com.example.orderdeliver.domain.ErrorContainer
 import com.example.orderdeliver.domain.PendingContainer
 import com.example.orderdeliver.domain.SuccessContainer
 import com.example.orderdeliver.presentation.delivery.models.CityModel
-import com.example.orderdeliver.presentation.navigation.screenViewModel
 import com.example.orderdeliver.presentation.views.viewBinding
 import com.example.orderdeliver.utils.getVerticalLayoutManager
 import com.example.orderdeliver.utils.showLog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ManualChooseFragment : BaseFragment(R.layout.fragment_manual_choose), CityAdapter.SelectCityListener {
 
     class Screen : BaseScreen
 
     private val binding by viewBinding<FragmentManualChooseBinding>()
 
-    override val viewModel by screenViewModel<ManualChooseViewModel>()
+    override val viewModel by viewModels<ManualChooseViewModel>()
 
     private val cityAdapter: CityAdapter = CityAdapter(this)
 

@@ -1,13 +1,14 @@
 package com.example.orderdeliver.presentation.delivery
 
-import com.example.navigation.BaseScreen
-import com.example.navigation.BaseViewModel
-import com.example.navigation.Navigator
+import androidx.lifecycle.ViewModel
+import com.example.orderdeliver.presentation.plugins.plugins.NavigatorPlugin
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class PlaceDeliveryViewModel(
-    private val navigator: Navigator,
-    screen: PlaceDeliveryFragment.Screen,
-) : BaseViewModel() {
+@HiltViewModel
+class PlaceDeliveryViewModel @Inject constructor(
+    private val navigator: NavigatorPlugin
+) : ViewModel() {
 
     fun exit() = navigator.goBack()
 
