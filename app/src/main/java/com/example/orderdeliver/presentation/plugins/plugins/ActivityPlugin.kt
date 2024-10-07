@@ -14,9 +14,4 @@ open class ActivityPlugin {
     open fun onPause(){
         whenActivityActive.mainActivity = null
     }
-
-    fun withActivity(block: (AppCompatActivity) -> Unit) = whenActivityActive{
-        block(it)
-    }
-
 }

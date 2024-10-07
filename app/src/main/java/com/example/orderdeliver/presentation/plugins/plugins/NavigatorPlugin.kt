@@ -43,6 +43,7 @@ class NavigatorPlugin @Inject constructor() : ActivityPlugin() {
         }
 
         transaction.replace(idFragment, fragment).commit()
+
     }
 
     private companion object{

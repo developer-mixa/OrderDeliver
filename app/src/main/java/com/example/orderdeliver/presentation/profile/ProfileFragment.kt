@@ -25,13 +25,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         renderSelectors()
     }
 
-    private fun render(){
-
-    }
-
-    private fun renderContent(){
-        renderSelectors()
-    }
 
     private fun renderSelectors() = with(binding){
         val cardViewSelector = CardViewSelector(

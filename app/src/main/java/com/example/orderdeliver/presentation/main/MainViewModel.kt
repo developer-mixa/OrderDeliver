@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.orderdeliver.domain.repositories.BasketRepository
 import com.example.orderdeliver.domain.usecases.TapToMenuUseCase
+import com.example.orderdeliver.presentation.auth.auth.AuthFragment
 import com.example.orderdeliver.presentation.basket.BasketFragment
 import com.example.orderdeliver.presentation.menu.MenuFragment
 import com.example.orderdeliver.presentation.plugins.plugins.NavigatorPlugin
-import com.example.orderdeliver.presentation.profile.ProfileFragment
 import com.example.orderdeliver.utils.share
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -44,6 +44,6 @@ class MainViewModel @Inject constructor(
 
     fun openBasket() = navigator.launch(BasketFragment.Screen())
 
-    fun openProfile() = navigator.launch(ProfileFragment.Screen())
+    fun openProfile() = navigator.launch(AuthFragment.Screen())
 
 }

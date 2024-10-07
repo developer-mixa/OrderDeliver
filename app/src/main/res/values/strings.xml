@@ -13,4 +13,6 @@
     <string name="products_count">%1$s товаров</string>
     <string name="payment_was_successful">Платёж прошёл успешно!</string>
     <string name="add_to_basket">В корзину за %1$s</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
 </resources>
