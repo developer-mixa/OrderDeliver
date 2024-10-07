@@ -9,8 +9,10 @@ import com.example.orderdeliver.presentation.auth.signin.SignInFragment
 import com.example.orderdeliver.presentation.auth.signup.SignUpFragment
 import com.example.orderdeliver.presentation.plugins.core.BaseScreen
 import com.example.orderdeliver.presentation.views.viewBinding
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class AuthFragment : Fragment(R.layout.fragment_auth) {
@@ -19,8 +21,8 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     private var pagerAdapter: AuthAdapter? = null
 
     private val authFragments get() = listOf(
-        getString(R.string.sign_in) to SignInFragment.instance(),
-        getString(R.string.sign_up) to SignUpFragment.instance()
+        getString(R.string.sign_in).uppercase(Locale.getDefault()) to SignInFragment.instance(),
+        getString(R.string.sign_up).uppercase(Locale.getDefault()) to SignUpFragment.instance()
     )
 
     class Screen: BaseScreen
@@ -37,7 +39,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private fun setupTabs() = with(binding){
         pager.adapter = pagerAdapter
-
+        pager.layoutMode = TabLayout.MODE_SCROLLABLE
         TabLayoutMediator(tabLayout, pager) { tab, position ->
             tab.text = authFragments[position].first
         }.attach()
