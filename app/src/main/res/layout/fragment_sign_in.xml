@@ -9,6 +9,7 @@
 
 
     <TextView
+        android:id="@+id/usernameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -21,17 +22,18 @@
         android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/usernameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/auth_edit_text_background"
-        android:padding="8dp"
-        android:text="asdasd" />
+        android:padding="8dp" />
 
 
     <TextView
+        android:id="@+id/passwordText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -44,17 +46,17 @@
         android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/passwordInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/auth_edit_text_background"
-        android:padding="8dp"
-        android:text="asdasd" />
+        android:padding="8dp" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/keepMeSignIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -66,14 +68,15 @@
         android:textStyle="bold" />
 
     <Button
+        android:id="@+id/signInButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:backgroundTint="#2B12CC"
-        android:text="Sign up"
 
+        android:text="Sign in"
         android:textAllCaps="true" />
 
 

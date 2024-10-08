@@ -3,10 +3,13 @@ package com.example.orderdeliver.presentation.plugins.plugins
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.orderdeliver.R
 import com.example.orderdeliver.presentation.activities.MainActivity
+import com.example.orderdeliver.presentation.auth.auth.AuthFragment
+import com.example.orderdeliver.presentation.plugins.core.AuthScreen
 import com.example.orderdeliver.presentation.plugins.core.BaseScreen
 import com.example.orderdeliver.presentation.plugins.core.Event
 import javax.inject.Inject
@@ -33,6 +36,10 @@ class NavigatorPlugin @Inject constructor() : ActivityPlugin() {
     }
 
     fun launchFragment(activity: MainActivity, screen: BaseScreen, addToBackStack: Boolean = false, @IdRes idFragment: Int = R.id.fragmentContainer){
+        if(screen is AuthScreen){
+            launchAuthFragment(activity)
+            return
+        }
         val fragment = screen.javaClass.enclosingClass.newInstance() as Fragment
         fragment.arguments = bundleOf(ARG_SCREEN to screen)
         val transaction = activity.supportFragmentManager.beginTransaction()
@@ -44,6 +51,13 @@ class NavigatorPlugin @Inject constructor() : ActivityPlugin() {
 
         transaction.replace(idFragment, fragment).commit()
 
+    }
+
+    private fun launchAuthFragment(activity: MainActivity){
+        val transaction = activity.supportFragmentManager.beginTransaction()
+        transaction.addToBackStack(null)
+        transaction.setCustomAnimations(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left, R.anim.anim_slide_out_right, R.anim.anim_slide_in_right);
+        transaction.replace(R.id.fragmentMainContainer, AuthFragment()).commit()
     }
 
     private companion object{

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.orderdeliver.presentation.plugins.core.BaseScreen
 import com.example.orderdeliver.R
 import com.example.orderdeliver.databinding.FragmentProfileBinding
+import com.example.orderdeliver.presentation.plugins.core.AuthScreen
 import com.example.orderdeliver.presentation.views.viewBinding
 import com.example.orderdeliver.utils.CardViewSelector
 import com.example.orderdeliver.utils.IconTintSelector
@@ -16,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
-    class Screen : BaseScreen
+    class Screen : AuthScreen
 
     private val binding by viewBinding<FragmentProfileBinding>()
 

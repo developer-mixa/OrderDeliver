@@ -3,6 +3,7 @@ package com.example.orderdeliver.presentation.auth.auth
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.viewModels
 import com.example.orderdeliver.R
 import com.example.orderdeliver.databinding.FragmentAuthBinding
 import com.example.orderdeliver.presentation.auth.signin.SignInFragment
