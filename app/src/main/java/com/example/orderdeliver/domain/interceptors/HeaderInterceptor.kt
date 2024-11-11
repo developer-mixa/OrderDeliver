@@ -10,7 +10,8 @@ class HeaderInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest: Request = chain.request()
         val builder: Request.Builder =
-            originalRequest.newBuilder().header(API_KEY, BuildConfig.BACKEND_API_KEY)
+            originalRequest.newBuilder()
+                .header(API_KEY, BuildConfig.BACKEND_API_KEY)
         val newRequest: Request = builder.build()
         return chain.proceed(newRequest)
     }

@@ -1,10 +1,12 @@
 package com.example.orderdeliver.data.base
 
 import com.example.orderdeliver.data.models.ErrorResponseBody
+import com.example.orderdeliver.utils.showLog
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.JsonEncodingException
 import com.squareup.moshi.Moshi
 import retrofit2.HttpException
+import retrofit2.Response
 import java.io.IOException
 
 open class BaseRetrofitSource(moshi: Moshi) {
@@ -29,10 +31,11 @@ open class BaseRetrofitSource(moshi: Moshi) {
 
     private fun createServerException(e: HttpException): Exception {
         return try {
-            val errorBody: ErrorResponseBody = errorAdapter.fromJson(
-                e.response()!!.errorBody()!!.string()
-            )!!
-            BackendException(errorBody.message, e.code())
+            val errorBody = errorAdapter.fromJson(
+                e.response()?.errorBody()?.string() ?: ""
+            )
+
+            BackendException(errorBody?.message ?: "", e.code())
         } catch (e: Exception) {
             println(e)
             throw ParseJsonException(e)

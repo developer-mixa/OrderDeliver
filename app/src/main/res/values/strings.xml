@@ -15,4 +15,7 @@
     <string name="add_to_basket">В корзину за %1$s</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
+    <string name="not_authorized">Пожалуйста, войдите в систему</string>
+    <string name="server_error">Произошла ошибка сервера. Попробуйте позже.</string>
+    <string name="undefined_error">Произошла неизвестная ошибка. Обратитесь в службу поддержки.</string>
 </resources>

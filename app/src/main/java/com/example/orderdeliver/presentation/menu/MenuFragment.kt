@@ -80,9 +80,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
             viewModel.getTypeFoods()
         }
 
-        showLog("asdasdasdasd")
         loadStateContainer.tryAgainAction {
-            showLog("asdasdasdasd")
             viewModel.filterFoods()
         }
     }

@@ -16,8 +16,4 @@ interface AuthApi {
 
     @POST("auth/jwt/create")
     suspend fun signIn(@Body signInRequest: SignInRequest) : SignInResponse
-
-    @GET("auth/users/me")
-    suspend fun getCurrentUser()
-
 }
