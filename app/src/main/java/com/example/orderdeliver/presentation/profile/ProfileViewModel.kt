@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.orderdeliver.R
 import com.example.orderdeliver.data.base.BackendException
 import com.example.orderdeliver.domain.repositories.ProfileRepository
+import com.example.orderdeliver.domain.usecases.ExitAccountUseCase
 import com.example.orderdeliver.domain.usecases.GetUserTokenUseCase
 import com.example.orderdeliver.presentation.plugins.plugins.NavigatorPlugin
 import com.example.orderdeliver.presentation.plugins.plugins.ToastPlugin
@@ -20,25 +21,28 @@ class ProfileViewModel @Inject constructor(
     private val toasts: ToastPlugin,
     private val profileRepository: ProfileRepository,
     private val getUserTokenUseCase: GetUserTokenUseCase,
+    private val exitAccountUseCase: ExitAccountUseCase
 ) : ViewModel() {
 
-    init {
-        getCurrentUserData()
-    }
-
-    private fun getCurrentUserData() = viewModelScope.launch{
+    fun getCurrentUserData() = viewModelScope.launch {
         try {
             val successToken = getUserTokenUseCase()
             profileRepository.getMe(successToken)
-        } catch (e: BackendException){
-            val errorMessage = if (e.code == HttpStatus.UNAUTHORIZED) R.string.not_authorized else R.string.server_error
+        } catch (e: BackendException) {
+            val errorMessage =
+                if (e.code == HttpStatus.UNAUTHORIZED) R.string.not_authorized else R.string.server_error
 
             toasts.toast(errorMessage)
             navigator.launchAuthFragment()
-        } catch (e: Exception){
+        } catch (e: Exception) {
             toasts.toast(R.string.undefined_error)
             showLog(e.toString())
         }
+    }
+
+    fun exitFromProfile() {
+        exitAccountUseCase()
+        navigator.launchAuthFragment()
     }
 
 }

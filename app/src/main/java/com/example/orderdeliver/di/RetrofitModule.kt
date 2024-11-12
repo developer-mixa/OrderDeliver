@@ -2,6 +2,7 @@ package com.example.orderdeliver.di
 
 import com.example.orderdeliver.data.models.RetrofitConfig
 import com.example.orderdeliver.domain.interceptors.HeaderInterceptor
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -29,7 +30,8 @@ class RetrofitModule {
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
-        return Moshi.Builder().build()
+        return Moshi.Builder()
+            .build()
     }
 
     @Provides
@@ -49,8 +51,8 @@ class RetrofitModule {
 
     private fun createRetrofit(url: String, client: OkHttpClient, moshi: Moshi): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(url)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .baseUrl(url)
             .client(client)
             .build()
     }

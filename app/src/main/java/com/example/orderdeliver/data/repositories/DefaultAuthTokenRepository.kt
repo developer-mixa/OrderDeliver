@@ -31,4 +31,10 @@ class DefaultAuthTokenRepository @Inject constructor(
         return sharedPrefs.getString(SUCCESS_AUTH_TOKEN_KEY, "") ?: ""
     }
 
+    override fun clearTokens() = with(sharedPrefs.edit()){
+        remove(REFRESH_AUTH_TOKEN_KEY)
+        remove(SUCCESS_AUTH_TOKEN_KEY)
+        apply()
+    }
+
 }

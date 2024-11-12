@@ -3,6 +3,7 @@ package com.example.orderdeliver.domain.usecases
 import com.example.orderdeliver.data.validators.AuthValidator
 import com.example.orderdeliver.domain.repositories.AuthServiceRepository
 import com.example.orderdeliver.domain.requests.SignUpRequest
+import com.example.orderdeliver.utils.showLog
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,6 +13,8 @@ class SignUpUseCase @Inject constructor(
     private val authValidator: AuthValidator
 ) {
     suspend operator fun invoke(signUpRequest: SignUpRequest){
+
+        showLog("invoke")
 
         signUpRequest.phone?.let { phone->
             if(!authValidator.validNumber(phone)){

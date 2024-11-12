@@ -4,4 +4,5 @@ interface AuthTokenRepository {
     fun saveTokens(refreshToken: String, successToken: String)
     fun getRefreshToken() : String
     fun getSuccessToken() : String
+    fun clearTokens()
 }
